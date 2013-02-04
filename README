@@ -1,0 +1,24 @@
+Cloud history install
+---------------------
+
+Cloud history is an set of python scripts that query EC2 api periodically
+and store the data to postgreSQL database for further analysis of past of the cloud
+
+Setup
+-----
+Create an instance to cloud
+manually or by ansible playbook for eucalyptus datawarehouse
+
+Set up DB fo a cloud with name  <cloudname>history for example
+create tables from *.sql files
+psql <dbname> -f <tablename>.sql
+
+Copy the cloud credentials eucarc to same cloudhistory folder
+Add the cronjob for calling the scripts
+crontab <crontabfilename>
+
+Use
+---
+After a while you can query for example the most popular image from DB using SQL
+and possibly represent that data to users and admins in some web page graph
+

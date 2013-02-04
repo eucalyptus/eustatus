@@ -1,0 +1,6 @@
+#
+# Copyright Nokia Siemens Networks 2013, Authored by Teemu Jalonen
+#
+36	1,5,9,13,17,21 * * *	timeout 720 /home_local/histuser/cloudhistory/update_imagedata_to_db.sh cloud1 >/dev/null 2>&1
+0-59	* * * *	timeout 120 /home_local/histuser/cloudhistory/update_instancedata_to_db.sh cloud1 >/dev/null 2>&1
+46      1,5,9,13,17,21 * * *    timeout 720 /home_local/histuser/cloudhistory/update_accountdata_to_db.sh cloud1 2>&1
