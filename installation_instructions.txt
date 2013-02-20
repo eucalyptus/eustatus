@@ -1,3 +1,0 @@
-1. Copy checkclouds.php to your PHP and jQuery capable web server 
-2. Configure your crontab to run eutester according to the crontab example
-3. Start checkclouds.php on your web browser 
