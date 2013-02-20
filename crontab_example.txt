@@ -1,0 +1,3 @@
+# run cloud test every 30 minutes, put eutester output to a tmp file and then
+# copy it to a txt file
+0,30     *     *     *     *         timeout 900 python /etc/eutester/cloud1.py > /var/www/html/cloud1.tmp ; cp /var/www/html/cloud1.tmp /var/www/html/cloud1.txt
