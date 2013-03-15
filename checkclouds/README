@@ -8,9 +8,11 @@ installation instructions
 
 1. Copy checkclouds.php to your PHP and jQuery capable web server 
    cp checkclouds.php  /var/www/html # or /var/www
-2. Configure your crontab to run eutester according to the crontab example
-3. Visit checkclouds.php in your web browser 
-
+2. Install minimised jQuery 1.8.19 libraries to /jQuery in your web server.
+   N.B. if you use a different version you may have to customise the included web pages.
+3. Install eutester from Eucalyptus github.
+3. Configure your crontab to run eutester according to the crontab example
+4. Visit checkclouds.php in your web browser 
 
 Licensing 
 --------- 

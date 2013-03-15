@@ -1,3 +1,15 @@
+#
+#  Copyright 2013 Nokia Siemens Networks, Authored by Ilpo Latvala
+#
+#    To the extent possible under law, Nokia Siemens Networks has
+#    dedicated all copyright and related and neighboring rights to this
+#    software to the public domain worldwide. This software is
+#    distributed without any warranty.
+#
+#    You should have received a copy of the CC0 Public Domain
+#    Dedication along with this software. If not, see
+#    <http://creativecommons.org/publicdomain/zero/1.0/>.
+#
 # run cloud test every 30 minutes, put eutester output to a tmp file and then
 # copy it to a txt file
 0,30     *     *     *     *         timeout 900 python /etc/eutester/cloud1.py > /var/www/html/cloud1.tmp ; cp /var/www/html/cloud1.tmp /var/www/html/cloud1.txt
