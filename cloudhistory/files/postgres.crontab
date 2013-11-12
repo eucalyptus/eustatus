@@ -1,0 +1,1 @@
+25 10 * * * timeout 720 /usr/pgsql-9.1/bin/pg_dumpall > /tmp/cloudhistoryescloc56.sql -p 8443
