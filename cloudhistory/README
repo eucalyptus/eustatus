@@ -1,4 +1,4 @@
-Cloud history README file
+Cloud usage history README file
 
 
 installation
@@ -9,27 +9,41 @@ and store the data to postgreSQL database for further analysis of past of the cl
 
 Setup
 -----
-Create an instance to cloud
-manually or by ansible playbook for eucalyptus datawarehouse
 
-Set up DB fo a cloud with name  <cloudname>history for example
-create tables from *.sql files
-psql <dbname> -f <tablename>.sql
+Expects RHEL/CENTOS6 [tested on rhel6.3 64b]
 
-Copy the cloud credentials eucarc to same cloudhistory folder
-Add the cronjob for calling the scripts
-crontab <crontabfilename>
+Create security group and keypair
+Modify the vars/euca-dw.yml to match your environment
+
+Source your clouds credentials
+
+Launch the playbook with command
+ansible-playbook -vvv --private-key=mykey.private cloudhistory-ec2.yml
+
+use reemon for read only access to history db
+eemon to write access to historydb
+
+allow the access to ports you have used for your security group
+for example like this:
+
+euca-authorize -P icmp -t -1:-1 -s 0.0.0.0/0 cloudhistdw
+
+euca-authorize -P tcp -p 8443 -s 0.0.0.0/0 cloudhistdw
+
+euca-authorize -P tcp -p 22 -s 0.0.0.0/0 cloudhistdw
+
+euca-authorize -P tcp -p 80 -s 0.0.0.0/0 cloudhistdw
 
 Use
 ---
-After a while you can query for example the most popular image from DB using SQL
-and possibly represent that data to users and admins in some web page graph
 
+Access the data with browser using http://instanceaddress
+Or query the DB from outside with readonly user reemon
 
 Licensing 
 --------- 
 The code included was written by a subcontractor working for Nokia
-Siemens Networks.
+Siemens Networks and Nokia Solutions and Networks.
 
 The majority of the code is released by Nokia Siemens Networks under
 the Apache license - please see APSL-2.0.txt included in the source

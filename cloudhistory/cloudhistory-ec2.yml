@@ -1,0 +1,238 @@
+# ----------------------------------------------------- 
+# This playbook is for deploying the cloud history and eucalyptus reporting instance into EC2/Euca
+# TJ 7.8.2013
+# -----------------------------------------------------
+
+- name: Stage instance
+  hosts: local
+  connection: local
+  user: root
+  gather_facts: false
+
+  vars_files:
+      - vars/euca-dw.yml
+  tasks:
+    - name: Launch instance
+      local_action: ec2 keypair=$keypair group=$security_group instance_type=$instance_type image=$image wait=true
+      register: ec2
+      
+    - name: Add new instance to host group
+      local_action: add_host hostname=${item.public_ip} groupname=reporting
+      with_items: ${ec2.instances}
+
+     
+    - name: Wait for SSH to come up
+      local_action: wait_for host=${item.public_ip} port=22 delay=60 timeout=320 state=started
+      with_items: ${ec2.instances}
+ 
+- name: Configure instance
+  hosts: reporting
+  user: root
+  gather_facts: True
+
+  vars_files:
+      - vars/euca-dw.yml
+      
+  tasks:
+    - name: Ensure NTP is up and running
+      action: service name=ntpd state=started
+
+    - name: add search domains to resolv.conf
+      action: shell sed -i 's/^search/search eucalyptus eucalyptus.internal domain.com/' /etc/resolv.conf
+
+    - name: Ensure NTP is uptodate and running
+      action: command ntpdate -u {{ ntphost }}
+
+    - name: Create eemon user with passwd
+      action: user name=eemon home={{ eemonhome }} password=VW01cZ06C7w7g
+
+    - name: Download eucalyptus release RPM
+      action: get_url url=http://downloads.eucalyptus.com/software/eucalyptus/3.3/rhel/6/x86_64/eucalyptus-release-3.3.noarch.rpm dest=/tmp/ thirsty=yes
+    
+    - name: Download euca2ools repo RPM
+      action: get_url url=http://downloads.eucalyptus.com/software/euca2ools/2.1/centos/6/x86_64/euca2ools-release-2.1.noarch.rpm dest=/tmp/ thirsty=yes
+
+    - name: download epel 6 repo
+      action: get_url url=http://downloads.eucalyptus.com/software/euca2ools/3.0/rhel/6Server/x86_64/epel-release-6.noarch.rpm dest=/tmp/ thirsty=yes
+
+    - name: Configure Eucalyptus repo
+      action: command rpm -Uvh --force /tmp/eucalyptus-release-3.3.noarch.rpm 
+
+    - name: Configure Euca2ool v2.1 repo
+      action: command rpm -Uvh --force /tmp/euca2ools-release-2.1.noarch.rpm
+
+    - name: Configure Epel repo
+      action: command rpm -Uvh --force /tmp/epel-release-6.noarch.rpm
+
+    - name: Install Eucalyptus Reporting Archive (Data Warehouse)
+      action: yum pkg=eucadw state=latest
+
+    - name: Install cloud history and other needed packages
+      action: yum pkg=python-psycopg2,openssh-clients,vim,python-argparse,bind-utils,unzip,tidy,euca2ools state=latest
+
+    - name: Install Cloud history query related packages
+      action: yum pkg=httpd,php,php-pgsql state=latest
+
+    - name: Enable httpd on restart
+      action: service name=httpd enabled=yes
+
+    - name: start httpd
+      action: service name=httpd state=started
+
+    - name: stop iptables
+      action: service name=iptables state=stopped enabled=no
+
+    - name: Change inline the php to match the this clouds parameters
+      action: template  src=templates/index.j2 dest=/var/www/html/index.php owner=root mode=0755
+
+    - name: Install PostgreSQL 9.1
+      action: yum pkg=postgresql91-server state=latest
+
+    - name: allow write to  {{ pgdir }}
+      action: file dest={{ pgdir }} mode=0777 owner=root group=root state=directory recurse=yes
+
+    - name: Initialize the PostgreSQL database
+      action: shell su - postgres -c "/usr/pgsql-9.1/bin/initdb -D {{ pgdir }}/pgsql/9.1/data"
+
+    - name: Template pg_hba.conf
+      action: template src=templates/pg_hba.conf.j2 dest=${pgdir}/pgsql/9.1/data/pg_hba.conf owner=postgres mode=0600
+
+    - name: Change listen address to all
+      action: template src=templates/postgresql.j2  dest=${pgdir}/pgsql/9.1/data/postgresql.conf owner=postgres mode=0600
+
+    - name: sed PGDATA /etc/init.d/postgresql-9.1
+      action: shell sed -i 's_^PGDATA=/var/lib/pgsql/9.1/data_PGDATA={{ pgdir }}/pgsql/9.1/data_' /etc/init.d/postgresql-9.1
+
+    - name: sed PGPORT /etc/init.d/postgresql-9.1 
+      action: shell sed -i 's_^PGPORT=5432_PGPORT={{ pgport }}_' /etc/init.d/postgresql-9.1
+
+    - name: sed PGLOG /etc/init.d/postgresql-9.1
+      action: shell sed -i 's_^PGLOG=/var/lib/pgsql/9.1/pgstartup.log_PGLOG={{ pgdir }}/pgsql/9.1/pgstartup.log_' /etc/init.d/postgresql-9.1
+ 
+    - name: Pausing
+      action: pause seconds=15
+
+    - name: Start PostgreSQL 9.1
+      action: service name=postgresql-9.1 state=started
+
+    - name: Pausing
+      action: pause seconds=10
+
+    - name: Create the datawarehouse PostgreSQL database
+      action: postgresql_db db=eucalyptus_reporting port={{ pgport }}
+
+    - name: Configure the PostgreSQL postgres user for datawarehousedb
+      action: postgresql_user db=eucalyptus_reporting user=eucalyptus password={{ pg_password }} priv=ALL port={{ pgport }}
+
+    - name: Configure the PostgreSQL eemon user for cloud history db
+      action: postgresql_user user=eemon password={{ eemondbpasswd }}  role_attr_flags=CREATEDB port={{ pgport }}
+
+    - name: Create the cloudhistory PostgreSQL database
+      action: postgresql_db db={{ cloudname }} owner=eemon port={{ pgport }}
+
+    - name: Configure the PostgreSQL reemon user for cloud history db
+      action: postgresql_user db={{ cloudname }} user=reemon password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
+
+    - name: Configure the PostgreSQL reemon user for eucalyptus_reporting db
+      action: postgresql_user db=eucalyptus_reporting user=reemon password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
+
+
+    - name: Restart PostgreSQL 9.1
+      action: service name=postgresql-9.1 state=started 
+    
+    - name: Copy sql table creation scripts to instance
+      action: copy src=files/{{ item }} dest={{ eemonhome }} owner=eemon group=eemon mode=0755
+      with_items:
+      - create_accounts_table.sql
+      - create_images_table.sql
+      - create_instance_table.sql
+      - create_cloudstatus_table.sql
+
+    - name:  Create tables to cloud history $cloudname database
+      action: command su - eemon -l -c "psql -p {{ pgport }}  {{ cloudname }} -f {{ item }}"
+      with_items:
+      - create_accounts_table.sql
+      - create_images_table.sql
+      - create_instance_table.sql
+      - create_cloudstatus_table.sql
+
+    - name: Copy template move database dump script
+      action: template src=templates/move_db_dump.j2 dest=/root/move_db_dump.sh
+
+    - name: Create Cronjob for moving backup file
+      action: cron name="move backups" minute=30 hour="5" user=root job="timeout 720 /root/move_db_dump.sh {{ cloudname }} >/dev/null 2>&1"
+
+    - name: Create cloudhistory directory
+      action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/"
+
+    - name: Copy cloudhistory python files to instance
+      action: copy src=files/{{ item }} dest={{ eemonhome }}/cloudhistory/{{ item }} owner=eemon group=eemon mode=0755
+      with_items:
+      - readinsertinstances.py
+      - readinsertimages.py
+      - readinsertaccounts.py
+
+    - name: Copy templated accountdata cronjob scripts to instance 
+      action:  template src=templates/update_accountdata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_accountdata_to_db.sh owner=eemon mode=0755
+
+    - name: Copy templated imagedata cronjob scripts to instance
+      action:  template src=templates/update_imagedata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_imagedata_to_db.sh owner=eemon mode=0755
+
+    - name: Copy templated instancedata cronjob scripts to instance
+      action:  template src=templates/update_instancedata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instancedata_to_db.sh owner=eemon mode=0755
+
+    - name: Create eemon Cronjob for updating image data
+      action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 ${eemonhome}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+
+    - name: Create eemon Cronjob for updating account data
+      action: cron name="Update Account data" minute=26 hour="1,5,9,13,17,21" user=eemon job="timeout 720 ${eemonhome}/cloudhistory/update_accountdata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+
+    - name: Create eemon Cronjob for updating instance data
+      action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 ${eemonhome}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+
+    - name: Create Cronjob for backing up the databases
+      action: cron name="backup dbs" minute=30 hour="10" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} > /tmp/{{ cloudname }}.sql >/dev/null 2>&1"
+
+    - name: Create admin creds directory
+      action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/.euca_{{ cloudname }}_admin/"
+
+    - name: Get Eucalyptus credentials of the cloud {{ cloudname }}
+      action: copy src=${adminzipdir}/admin.zip dest=${eemonhome}/cloudhistory/.euca_{{ cloudname }}_admin/admin.zip owner=eemon group=eemon mode=0755
+
+    - name: unzip admin credentials
+      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory/.euca_{{ cloudname }}_admin;unzip admin.zip"
+
+    - name:  Create result XML file by touch for image data collection
+      action: command su - eemon -l -c "touch ${eemonhome}/cloudhistory/{{ cloudname }}_tidy_images.xml"
+
+    - name: First time run account data collecttion
+      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
+
+    - name: First time run of image data collecttion
+      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
+
+    - name: Second time run account data collecttion
+      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
+
+    - name: Second time run of image data collecttion
+      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
+
+    - name: Pausing for db to start
+      action: pause seconds=30
+
+    - name: Grant Reemon read access to $cloudname db
+      action: command su - postgres -l -c "psql $cloudname  -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
+
+    - name: Grant Reemon read access to eucalyptus_reporting db
+      action: command su - postgres -l -c "psql eucalyptus_reporting -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
+
+# Use this section for a mail notification when instance configuration is complete. 
+# You need to set the mail_from and mail_to vars.
+#  - name: Send e-mail to admins
+#    local_action: mail
+#        from=${mail_from}
+#       to=${mail_to}
+#      subject="EC2 instance (${shortname}) ${ec2.instances[0].id}"
+#        body="EC2 instance ${ec2.instances[0].id} created on ${ec2.instances[0].public_ip}"
+
+
