@@ -1,0 +1,7 @@
+local	all	all			trust
+host	all	all	127.0.0.1/32	password
+host	all	all	::1/128		password
+host all eemon 127.0.0.1/32 trust
+host all reemon all password
+local all eemon,postgres trust
+host all all ::1/128 trust

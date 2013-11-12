@@ -1,0 +1,17 @@
+pg_password: password123
+pgport: 8443
+pgdir: /ephemeral
+pgdata: /ephemeral/pgsql/9.1/data
+pglog: /ephemeral/pgsql/9.1/pgstartup.log
+dbusername: eemon
+eemondbpasswd: histpasswd
+reemondbpasswd: readonlypasswd
+cloudname: mycloud
+keypair: admindwtest
+instance_type: m1.small
+security_group: default
+image: emi-BF873797
+ntphost: ntp
+eemonhome: /home_local/eemon
+adminzipdir: /root/.euca
+backupserver: mybackupserver.domain.com

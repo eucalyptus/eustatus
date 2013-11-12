@@ -1,0 +1,13 @@
+#/bin/sh
+if [ $# -lt 1 ]
+then
+        echo "Usage : update_instancedata_to_db.sh <cloudname>"
+        exit 1
+else
+        export http_proxy=
+        CLOUDNAME=$1
+	source {{ eemonhome }}/cloudhistory/.euca_$CLOUDNAME\_admin/eucarc
+	euca-describe-instances verbose --debug 2> {{ eemonhome }}/cloudhistory/euca-describe-instances_verbose_$CLOUDNAME\.xml
+	tidy -xml -i -q  -w 0 -o {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_instances.xml < {{ eemonhome }}/cloudhistory/euca-describe-instances_verbose_$CLOUDNAME\.xml
+	{{ eemonhome }}/cloudhistory/readinsertinstances.py -n $CLOUDNAME -p {{ eemondbpasswd }} -port={{ pgport }} -x {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_instances.xml
+fi

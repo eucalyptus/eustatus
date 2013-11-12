@@ -1,0 +1,14 @@
+#/bin/sh
+
+if [ $# -lt 1 ]
+then
+        echo "Usage : update_accountdata_to_db.sh <cloudname>"
+        exit 1
+else
+        export http_proxy=
+        CLOUDNAME=$1
+        source {{ eemonhome }}/cloudhistory/.euca_$CLOUDNAME\_admin/eucarc
+        euare-accountlist --debug 2> {{ eemonhome }}/cloudhistory/euare-accountlist_$CLOUDNAME\.xml
+        tidy -xml -i -q -w 0 -o {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_accountlist.xml < {{ eemonhome }}/cloudhistory/euare-accountlist_$CLOUDNAME\.xml
+        {{ eemonhome }}/cloudhistory/readinsertaccounts.py -n $CLOUDNAME -p {{ eemondbpasswd }} -u {{ dbusername }}  -port={{ pgport }} -x {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_accountlist.xml
+fi
