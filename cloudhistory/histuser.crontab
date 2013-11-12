@@ -1,0 +1,16 @@
+# cloud history crontab - example cron settings for gathering data to cloudhistory
+#
+#  Copyright 2013 Nokia Siemens Networks, Authored by Teemu Jalonen
+#
+#    To the extent possible under law, Nokia Siemens Networks has
+#    dedicated all copyright and related and neighboring rights to this
+#    software to the public domain worldwide. This software is
+#    distributed without any warranty.
+#
+#    You should have received a copy of the CC0 Public Domain
+#    Dedication along with this software. If not, see
+#    <http://creativecommons.org/publicdomain/zero/1.0/>.
+#
+36	1,5,9,13,17,21 * * *	timeout 720 /home_local/histuser/cloudhistory/update_imagedata_to_db.sh cloud1 >/dev/null 2>&1
+0-59	* * * *	timeout 120 /home_local/histuser/cloudhistory/update_instancedata_to_db.sh cloud1 >/dev/null 2>&1
+46      1,5,9,13,17,21 * * *    timeout 720 /home_local/histuser/cloudhistory/update_accountdata_to_db.sh cloud1 2>&1

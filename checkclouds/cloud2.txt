@@ -1,0 +1,162 @@
+0125/0484
+194/237
+eucalyptus 3.1.2
+[2012-11-30 12:30:05,461] [localhost] [DEBUG]: Looking up keypair keypair-1354271405
+[2012-11-30 12:30:05,683] [localhost] [DEBUG]: Creating keypair: keypair-1354271405
+[2012-11-30 12:30:06,272] [localhost] [DEBUG]: Looking up group group-1354271406
+[2012-11-30 12:30:06,309] [localhost] [DEBUG]: Creating Security Group: group-1354271406
+[2012-11-30 12:30:06,391] [localhost] [DEBUG]: Attempting authorization of group-1354271406 on port 22 tcp
+[2012-11-30 12:30:06,457] [localhost] [DEBUG]: Attempting authorization of group-1354271406 on port -1 icmp
+[2012-11-30 12:30:25,005] [localhost] [DEBUG]: Attempting to run instance-store image Image:emi-40B4375F in group group-1354271406
+[2012-11-30 12:30:25,729] [localhost] [DEBUG]: Beginning poll loop for the 1 found in Reservation:r-578B4376
+[2012-11-30 12:30:25,729] [localhost] [DEBUG]: Beginning poll loop for instance Instance:i-8E564731 to go to running
+[2012-11-30 12:30:25,823] [localhost] [DEBUG]: Instance(i-8E564731) State(pending), sleeping 20s
+[2012-11-30 12:30:45,934] [localhost] [DEBUG]: Instance(i-8E564731) State(pending), sleeping 20s
+[2012-11-30 12:31:06,035] [localhost] [DEBUG]: Waiting extra 10 seconds
+[2012-11-30 12:31:16,129] [localhost] [DEBUG]: Instance(i-8E564731) State(running) Poll(2) time elapsed (40)
+[2012-11-30 12:31:16,129] [localhost] [DEBUG]: Instance:i-8E564731 is now in running
+[2012-11-30 12:31:16,129] [localhost] [DEBUG]: Instance i-8E564731 now in running state
+[2012-11-30 12:31:16,129] [localhost] [DEBUG]: Instance:i-8E564731 got Public IP: euca-10-159-11-169.eucalyptus.cloud2.net Private IP: euca-10-254-246-242.eucalyptus.internal
+[2012-11-30 12:31:31,145] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: Attempting to reconnect_to_instance:i-8E564731
+[2012-11-30 12:31:31,145] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: SSH connection has hostname:euca-10-159-11-169.eucalyptus.cloud2.net and keypath: ./keypair-1354271405.pem
+[2012-11-30 12:31:31,145] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: Using Keypath:./keypair-1354271405.pem
+[2012-11-30 12:31:31,367] [localhost] [DEBUG]: Attempting to ping euca-10-159-11-169.eucalyptus.cloud2.net
+[2012-11-30 12:31:31,377] [localhost] [DEBUG]: Was able to ping address
+[2012-11-30 12:31:31,377] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# uname
+[2012-11-30 12:31:31,394] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:31:31,394] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: Linux
+
+[2012-11-30 12:31:41,404] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# cat /tmp/userdata.txt
+[2012-11-30 12:31:41,418] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:31:41,418] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: userdata is working
+
+[2012-11-30 12:31:41,418] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# ls -1 /dev/ | grep vd
+[2012-11-30 12:31:41,474] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:31:41,475] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: vda
+vda1
+vda2
+vda3
+
+[2012-11-30 12:31:41,501] [localhost] [DEBUG]: Sending create volume request
+[2012-11-30 12:31:41,660] [localhost] [DEBUG]: Polling for volume to become available
+[2012-11-30 12:31:41,660] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:31:52,499] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:31:52,500] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:32:03,348] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:32:03,348] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:32:14,234] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:32:14,234] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:32:25,267] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:32:25,267] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:32:36,137] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:32:36,137] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:32:47,577] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:32:47,577] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:32:58,502] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:32:58,503] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:33:09,647] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:33:09,647] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:33:21,011] [localhost] [DEBUG]: Volume:vol-71DD3ADA in creating state
+[2012-11-30 12:33:21,011] [localhost] [DEBUG]: Volume (vol-71DD3ADA) State(creating) sleeping 10s
+[2012-11-30 12:33:33,645] [localhost] [DEBUG]: Volume:vol-71DD3ADA in available state
+[2012-11-30 12:33:33,645] [localhost] [DEBUG]: Done. Waited a total of 100 seconds
+[2012-11-30 12:34:15,994] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# ls -1 /dev/ | grep vd
+[2012-11-30 12:34:16,010] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:16,010] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: vda
+vda1
+vda2
+vda3
+vdb
+
+[2012-11-30 12:34:16,010] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# mkfs.ext4 -F /dev/vdb
+[2012-11-30 12:34:16,620] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:16,620] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: mke2fs 1.41.14 (22-Dec-2010)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+131072 inodes, 524288 blocks
+26214 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=536870912
+16 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912
+
+Writing inode tables:  0/16 1/16 2/16 3/16 4/16 5/16 6/16 7/16 8/16 9/1610/1611/1612/1613/1614/1615/16done                            
+Creating journal (16384 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+This filesystem will be automatically checked every 24 mounts or
+180 days, whichever comes first.  Use tune2fs -c or -i to override.
+
+[2012-11-30 12:34:16,620] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# mkdir /mnt/device
+[2012-11-30 12:34:16,699] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:16,699] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: 
+[2012-11-30 12:34:16,699] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# mount /dev/vdb /mnt/device
+[2012-11-30 12:34:16,768] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:16,768] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: 
+[2012-11-30 12:34:16,768] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# echo '[Info] Performing WRITE test'
+[2012-11-30 12:34:16,822] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:16,822] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [Info] Performing WRITE test
+
+[2012-11-30 12:34:16,822] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# dd if=/dev/zero of=/mnt/device/speedtest.tmp bs=1M count=1000 2>&1 | grep MB
+[2012-11-30 12:34:24,851] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:24,851] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: 1048576000 bytes (1.0 GB) copied, 7.97205 s, 132 MB/s
+
+[2012-11-30 12:34:24,851] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# echo '[Info] Finished WRITE test'
+[2012-11-30 12:34:24,929] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:24,929] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [Info] Finished WRITE test
+
+[2012-11-30 12:34:24,929] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# echo '[Info] Performing READ test'
+[2012-11-30 12:34:24,983] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:24,983] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [Info] Performing READ test
+
+[2012-11-30 12:34:24,983] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# dd if=/mnt/device/speedtest.tmp of=/dev/zero 2>&1 | grep MB
+[2012-11-30 12:34:26,184] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:26,184] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: 1048576000 bytes (1.0 GB) copied, 1.12075 s, 936 MB/s
+
+[2012-11-30 12:34:26,184] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# echo '[Info] Finished READ test'
+[2012-11-30 12:34:26,241] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:26,241] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [Info] Finished READ test
+
+[2012-11-30 12:34:26,241] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# echo '[Info] Removing tmp file'
+[2012-11-30 12:34:26,319] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:26,321] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [Info] Removing tmp file
+
+[2012-11-30 12:34:26,321] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# rm -f /mnt/device/speedtest.tmp
+[2012-11-30 12:34:26,519] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:26,519] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: 
+[2012-11-30 12:34:46,539] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: [root@euca-10-159-11-169.eucalyptus.cloud2.net]# umount /mnt/device
+[2012-11-30 12:34:46,575] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: done with exec
+[2012-11-30 12:34:46,575] [i-8E564731-euca-10-159-11-169.eucalyptus.cloud2.net] [DEBUG]: 
+[2012-11-30 12:34:48,882] [localhost] [DEBUG]: Sent detach for volume: vol-71DD3ADA which is currently in state: available
+[2012-11-30 12:34:50,336] [localhost] [DEBUG]: Volume:vol-71DD3ADA state:in-use pause:10 elapsed:0
+[2012-11-30 12:35:02,408] [localhost] [DEBUG]: Volume:vol-71DD3ADA state:in-use pause:10 elapsed:11
+[2012-11-30 12:35:13,979] [localhost] [DEBUG]: Volume:vol-71DD3ADA state:in-use pause:10 elapsed:23
+[2012-11-30 12:35:25,505] [localhost] [DEBUG]: Volume:vol-71DD3ADA left in available
+[2012-11-30 12:35:27,004] [localhost] [DEBUG]: Sent delete for volume: vol-71DD3ADA
+[2012-11-30 12:35:30,154] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:35:41,621] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:35:53,777] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:36:05,883] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:36:18,645] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:36:30,901] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:36:43,131] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:36:55,378] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:37:08,317] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:37:20,027] [localhost] [DEBUG]: Volume:vol-71DD3ADA in deleting sleeping 10s
+[2012-11-30 12:37:30,049] [localhost] [CRITICAL]: Volume:vol-71DD3ADA left in deleting
+[2012-11-30 12:37:50,210] [localhost] [DEBUG]: Sending terminate for Instance:i-8E564731
+[2012-11-30 12:37:52,549] [localhost] [DEBUG]: Beginning poll loop for the 1 found in Reservation:r-578B4376
+[2012-11-30 12:37:52,549] [localhost] [DEBUG]: Beginning poll loop for instance Instance:i-8E564731 to go to terminated
+[2012-11-30 12:37:52,704] [localhost] [DEBUG]: Instance(i-8E564731) State(shutting-down), sleeping 20s
+[2012-11-30 12:38:13,985] [localhost] [DEBUG]: Waiting extra 10 seconds
+[2012-11-30 12:38:24,645] [localhost] [DEBUG]: Instance(i-8E564731) State(terminated) Poll(1) time elapsed (21)
+[2012-11-30 12:38:24,645] [localhost] [DEBUG]: Instance:i-8E564731 is now in terminated
+[2012-11-30 12:38:24,645] [localhost] [DEBUG]: Sending delete for keypair: keypair-1354271405
+[2012-11-30 12:38:25,411] [localhost] [DEBUG]: Sending delete for group: group-1354271406
+[2012-11-30 12:38:25,565] [localhost] [DEBUG]: Looking up group group-1354271406

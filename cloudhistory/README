@@ -1,0 +1,40 @@
+Cloud history README file
+
+
+installation
+------------
+
+Cloud history is an set of python scripts that query EC2 api periodically
+and store the data to postgreSQL database for further analysis of past of the cloud
+
+Setup
+-----
+Create an instance to cloud
+manually or by ansible playbook for eucalyptus datawarehouse
+
+Set up DB fo a cloud with name  <cloudname>history for example
+create tables from *.sql files
+psql <dbname> -f <tablename>.sql
+
+Copy the cloud credentials eucarc to same cloudhistory folder
+Add the cronjob for calling the scripts
+crontab <crontabfilename>
+
+Use
+---
+After a while you can query for example the most popular image from DB using SQL
+and possibly represent that data to users and admins in some web page graph
+
+
+Licensing 
+--------- 
+The code included was written by a subcontractor working for Nokia
+Siemens Networks.
+
+The majority of the code is released by Nokia Siemens Networks under
+the Apache license - please see APSL-2.0.txt included in the source
+distribution.  For convenience certain small or trivial files
+(e.g. the crontab) are released to the public domain (or CC0 in
+jurisdictions where the public domain is not applicable - please see
+the file CC0-1.0.txt in the distribution).
+

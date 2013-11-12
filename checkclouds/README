@@ -1,0 +1,29 @@
+checkclouds
+-----------
+
+A set of utilities for collecting and displaying operational information from multiple Eucalyptus clouds.
+
+installation instructions
+-------------------------
+
+1. Copy checkclouds.php to your PHP and jQuery capable web server 
+   cp checkclouds.php  /var/www/html # or /var/www
+2. Install minimised jQuery 1.8.19 libraries to /jQuery in your web server.
+   N.B. if you use a different version you may have to customise the included web pages.
+3. Install eutester from Eucalyptus github.
+3. Configure your crontab to run eutester according to the crontab example
+4. Visit checkclouds.php in your web browser 
+
+Licensing 
+--------- 
+The code included was written by a subcontractor working for Nokia
+Siemens Networks.
+
+The majority of the code is released by Nokia Siemens Networks under
+the Apache license - please see APSL-2.0.txt included in the source
+distribution.  For convenience certain small or trivial files
+(e.g. the crontab) are released to the public domain (or CC0 in
+jurisdictions where the public domain is not applicable - please see
+the file CC0-1.0.txt in the distribution).
+
+
