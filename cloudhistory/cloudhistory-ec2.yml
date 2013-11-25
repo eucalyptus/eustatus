@@ -157,7 +157,7 @@
       - create_cloudstatus_table.sql
 
     - name: Copy template move database dump script
-      action: template src=templates/move_db_dump.j2 dest=/root/move_db_dump.sh
+      action: template src=templates/move_db_dump.j2 dest=/root/move_db_dump.sh owner=root mode=0755
 
     - name: Create Cronjob for moving backup file
       action: cron name="move backups" minute=30 hour="5" user=root job="timeout 720 /root/move_db_dump.sh {{ cloudname }} >/dev/null 2>&1"
