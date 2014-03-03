@@ -20,5 +20,6 @@ privateIpAddress varchar(255),
 ipAddress varchar(255),
 rootDeviceType varchar(255),
 rootDeviceName varchar(255),
+node varchar(255),
 CONSTRAINT "instancehistory_pkey" PRIMARY KEY (instanceId )
 );
