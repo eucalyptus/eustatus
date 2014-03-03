@@ -59,7 +59,7 @@ ipAddress = ''
 rootDeviceType = ''
 rootDeviceName = ''
 
-previous_endtag = "{http://ec2.amazonaws.com/doc/2010-08-31/}groupId"
+previous_endtag = "{http://ec2.amazonaws.com/doc/2013-02-01/}groupId"
 
 def insertToDb(rervationId,reservationId,ownerId,groupId,instanceId,imageId,name,privateDnsName,dnsName,keyName,amiLaunchIndex,instanceType,launchTime,availabilityZone,kernelId,ramdiskId,privateIpAddress,ipAddress,rootDeviceType,rootDeviceName):
 	print "insertToDb: inserting Instance  ID",instanceId, "to db"
@@ -193,7 +193,7 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
 	# Start Event in iterparse <some tag>
 	if event == 'end':
 		#print "\n End tag", node.tag, " Previous tag: ",previous_endtag
-		if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/2010-08-31/}blockDeviceMapping":
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/2013-02-01/}blockDeviceMapping":
 			print "\n\n\n\n END instance previous end event tag",previous_endtag
 			print "All instance data",reservationId \
 				,ownerId,groupId		\
@@ -224,102 +224,102 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
 			else:
 				print "instance not in running state not adding to DB"
 
-		if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}reservationId":
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}reservationId":
 			reservationId = node.text
                         #print "\n reservationId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}ownerId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}ownerId":
                         ownerId = node.text
                         #print "\n ownerId :",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}groupId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}groupId":
                         groupId = node.text
                         #print "\n groupId :",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}instanceId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instanceId":
                         instanceId = node.text
                         #print "\n instanceId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}imageId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageId":
                         imageId = node.text
                         #print "\n imageId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}name":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}name":
                         name = node.text
                         print "\n name:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}privateDnsName":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}privateDnsName":
                         privateDnsName = node.text
                         #print "\n privateDnsName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}dnsName":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}dnsName":
                         dnsName = node.text
                         #print "\n dnsName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}keyName":
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}keyName":
                         keyName = node.text
                         #print "\n keyName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}amiLaunchIndex":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}amiLaunchIndex":
                         amiLaunchIndex = node.text
                         #print "\n amiLaunchIndex:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}instanceType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instanceType":
                         instanceType = node.text
                         #print "\n instanceType ",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}launchTime":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}launchTime":
                         launchTime = node.text
                         #print "\n launchTime:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}availabilityZone":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}availabilityZone":
                         availabilityZone = node.text
                         #print "\n availabilityZone:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}kernelId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}kernelId":
                         kernelId = node.text
                         #print "\n kernelId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}ramdiskId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}ramdiskId":
                         ramdiskId = node.text
                         #print "\n ramdiskId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}privateIpAddress":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}privateIpAddress":
                         privateIpAddress = node.text
                         #print "\n privateIpAddress:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}ipAddress":
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}ipAddress":
                         ipAddress = node.text
                         #print "\n ipAddress:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}rootDeviceType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceType":
                         rootDeviceType = node.text
                         #print "\n rootDeviceType:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}rootDeviceName":
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceName":
                         rootDeviceName = node.text
                         #print "\n rootDeviceName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}blockDeviceMapping":
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}blockDeviceMapping":
 			print "\n blockDeviceMapping:",node.text
                         previous_endtag = node.tag
                         continue
