@@ -197,31 +197,31 @@
       action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/.euca_{{ cloudname }}_admin/"
 
     - name: Get Eucalyptus credentials of the cloud {{ cloudname }}
-      action: copy src=${adminzipdir}/admin.zip dest=${eemonhome}/cloudhistory/.euca_{{ cloudname }}_admin/admin.zip owner=eemon group=eemon mode=0755
+      action: copy src={{adminzipdir}}/admin.zip dest={{eemonhome}}/cloudhistory/.euca_{{ cloudname }}_admin/admin.zip owner=eemon group=eemon mode=0755
 
     - name: unzip admin credentials
-      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory/.euca_{{ cloudname }}_admin;unzip admin.zip"
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory/.euca_{{ cloudname }}_admin;unzip admin.zip"
 
     - name:  Create result XML file by touch for image data collection
-      action: command su - eemon -l -c "touch ${eemonhome}/cloudhistory/{{ cloudname }}_tidy_images.xml"
+      action: command su - eemon -l -c "touch {{eemonhome}}/cloudhistory/{{ cloudname }}_tidy_images.xml"
 
     - name: First time run account data collecttion
-      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
 
     - name: First time run of image data collecttion
-      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
 
     - name: Second time run account data collecttion
-      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
 
     - name: Second time run of image data collecttion
-      action: command su - eemon -l -c "cd ${eemonhome}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
 
     - name: Pausing for db to start
       action: pause seconds=30
 
     - name: Grant Reemon read access to $cloudname db
-      action: command su - postgres -l -c "psql $cloudname  -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
+      action: command su - postgres -l -c "psql {{cloudname}}  -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
 
     - name: Grant Reemon read access to eucalyptus_reporting db
       action: command su - postgres -l -c "psql eucalyptus_reporting -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
