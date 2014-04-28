@@ -174,7 +174,7 @@ for event, node in context:
 		root = node	# the first element is root
         if event == 'end':
                 #print "\n End tag", node.tag
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}item":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}item":
 			if imageNotAlreadyInDb(imageId):
 				insertToDb(sampledatetime,imageId \
 				,imageLocation,imageState \
@@ -187,62 +187,62 @@ for event, node in context:
 				#print "End Tag Clearing root and node at item end"
 				node.clear()
 				root.clear()
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}imageId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageId":
                         imageId = node.text
                         #print "\n imageId:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}imageLocation":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageLocation":
                         imageLocation = node.text
                         #print "\n imageLocation:",node.text," Node tag",node.tag
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}imageState":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageState":
                         imageState = node.text
                         #print "\n imageState:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}imageOwnerId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageOwnerId":
                         imageOwnerId = node.text
                         #print "\n imageOwnerId:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}isPublic":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}isPublic":
                         isPublic = node.text
                         #print "\n isPublic:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}architecture":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}architecture":
                         architecture = node.text
                         #print "\n architecture:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}platform":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}platform":
                         platform = node.text
                         #print "\n platform ",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}imageType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageType":
                         imageType = node.text
                         #print "\n imageType:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}name":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}name":
                         name = node.text
                         #print "\n name:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}description":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}description":
                         description = node.text
                         #print "\n description:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}rootDeviceType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceType":
                         rootDeviceType = node.text
                         #print "\n rootDeviceType:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2010-08-31/}rootDeviceName":
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceName":
                         rootDeviceName = node.text
                         #print "\n rootDeviceName:",node.text
                         node.clear()
