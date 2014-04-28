@@ -41,14 +41,14 @@ AccountName = ''
 AccountEmail = ''
 
 def getEmail(AccountName):
-        command3 = "euare-usergetinfo -u " + AccountName + " -k email --delegate=" + AccountName
+        command3 = "euare-usergetinfo -u " + AccountName + " -k email --as-account=" + AccountName
         proc3 = subprocess.Popen(command3, stdout=subprocess.PIPE, shell=True)
         (out3, err3) = proc3.communicate()
         print "euareinfo output:", out3, "Error" ,err3
         # Test if the email was Not found and if not try admin user email instead
         if "Can not find user" in out3 or not out3:
                 print "in Can not find user or string empty - error path trying to get admin users email"
-                command4 = "euare-usergetinfo -u admin -k email --delegate=" + AccountName
+                command4 = "euare-usergetinfo -u admin -k email --as-account=" + AccountName
                 proc4 = subprocess.Popen(command4, stdout=subprocess.PIPE, shell=True)
                 (out4, err4) = proc4.communicate()
 		try:
