@@ -15,3 +15,4 @@ ntphost: ntp
 eemonhome: /home_local/eemon
 adminzipdir: /root/.euca
 backupserver: mybackupserver.domain.com
+zone: mycloud_1
