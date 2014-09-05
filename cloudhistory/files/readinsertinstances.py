@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 #
-#  Python script to read tidied and stripped xml from euca-describe-images --debug to postgres DB as an eemon user
+#  Python script to read tidied and stripped xml from euca-describe-instances verbose --debug to postgres DB as an eemon user
 #
 import os
 import sys
@@ -36,6 +36,7 @@ reservationId = ''
 # Owner Account Id
 ownerId = ''
 #Security Group name
+groupName = ''
 groupId = ''
 instanceId = ''
 imageId = ''
@@ -58,11 +59,17 @@ ipAddress = ''
 # ebs or normal instance store
 rootDeviceType = ''
 rootDeviceName = ''
+eucanodeip = ''
+key = ''
+value = ''
+virtualizationType = ''
 
 previous_endtag = "{http://ec2.amazonaws.com/doc/2013-02-01/}groupId"
+previous_nodetext = "empty"
 
-def insertToDb(rervationId,reservationId,ownerId,groupId,instanceId,imageId,name,privateDnsName,dnsName,keyName,amiLaunchIndex,instanceType,launchTime,availabilityZone,kernelId,ramdiskId,privateIpAddress,ipAddress,rootDeviceType,rootDeviceName):
+def insertToDb(rervationId,reservationId,ownerId,groupId,instanceId,imageId,name,privateDnsName,dnsName,keyName,amiLaunchIndex,instanceType,launchTime,availabilityZone,kernelId,ramdiskId,privateIpAddress,ipAddress,groupName,rootDeviceType,rootDeviceName,eucanodeip,virtualizationType):
 	print "insertToDb: inserting Instance  ID",instanceId, "to db"
+	monitoringstate = ''
 	try:
 		cursor.execute("INSERT INTO instancehistory (\
 			sampledatetime,reservationId	\
@@ -71,20 +78,20 @@ def insertToDb(rervationId,reservationId,ownerId,groupId,instanceId,imageId,name
 			,privateDnsName,dnsName		\
 			,keyName,amiLaunchIndex		\
 			,instanceType,launchTime	\
-			,availabilityZone		\
+			,availabilityZone,monitoringstate		\
 			,kernelId,ramdiskId		\
-			,privateIpAddress,ipAddress	\
-			,rootDeviceType,rootDeviceName)	\
-			VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",( sampledatetime\
+			,privateIpAddress,ipAddress,groupName	\
+			,rootDeviceType,rootDeviceName,eucanodeip,virtualizationType)	\
+			VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",( sampledatetime\
 			,reservationId,ownerId		\
                         ,groupId,instanceId		\
                         ,imageId,name,privateDnsName	\
                         ,dnsName,keyName		\
                         ,amiLaunchIndex,instanceType	\
-                        ,launchTime,availabilityZone	\
+                        ,launchTime,availabilityZone,monitoringstate	\
                         ,kernelId,ramdiskId		\
-                        ,privateIpAddress,ipAddress	\
-                        ,rootDeviceType,rootDeviceName))
+                        ,privateIpAddress,ipAddress,groupName	\
+                        ,rootDeviceType,rootDeviceName,eucanodeip,virtualizationType))
 		#conn execute ends
 		conn.commit()
 		#print"\ncursor status ",cursor.statusmessage
@@ -105,6 +112,8 @@ def cleanCloudDataVariables():
 	ownerId = ''
 	global groupId
 	groupId = ''
+	global groupName
+	groupName = ''
 	global instanceId
 	instanceId = ''
 	global imageId
@@ -135,6 +144,14 @@ def cleanCloudDataVariables():
 	rootDeviceType = ''
 	global rootDeviceName
 	rootDeviceName = ''
+	global eucanodeip
+	eucanodeip = ''
+	global key
+	key = ''
+	global value
+	value = ''
+	global virtualizationType
+	virtualizationType = ''
 	#print "cleanCloudDataVariables - description:",description
 #
 # Def cleanCloudDataVariables ends
@@ -155,14 +172,14 @@ def updateTimestamp(instanceId):
 #
 
 def instanceNotAlreadyInDb(instanceId):
-	print "instanceNotAlreadyInDb: searching Image:",instanceId," from db"
+	print "instanceNotAlreadyInDb: searching InstanceId:",instanceId," from db"
 	try:
 		cursor.execute("SELECT * from instancehistory WHERE instanceid=%(instanceId)s ",{'instanceId': instanceId} )
-		#print "instanceNotAlreadyInDb:",cursor.statusmessage
+		print "instanceNotAlreadyInDb:",cursor.statusmessage
 		row = cursor.fetchone()
-		#print "instanceNotAlreadyInDb: Row fetchone()",row
+		print "instanceNotAlreadyInDb: Row fetchone()",row
 		if row == None:
-			#print "instanceNotAlreadyInDb: row == None return 0"
+			print "instanceNotAlreadyInDb: row == None return 0"
 			return 1
 		else:
 			print "instanceNotAlreadyInDb: row != None return 1"
@@ -192,8 +209,8 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
 	#
 	# Start Event in iterparse <some tag>
 	if event == 'end':
-		#print "\n End tag", node.tag, " Previous tag: ",previous_endtag
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/2013-02-01/}blockDeviceMapping":
+		print "\n End tag", node.tag, " Previous tag: ",previous_endtag
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instancesSet":
 			print "\n\n\n\n END instance previous end event tag",previous_endtag
 			print "All instance data",reservationId \
 				,ownerId,groupId		\
@@ -202,8 +219,8 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
                         	,keyName,amiLaunchIndex,instanceType \
                         	,launchTime, availabilityZone	\
                         	,kernelId,ramdiskId		\
-                        	,privateIpAddress,ipAddress	\
-				,rootDeviceType,rootDeviceName
+                        	,privateIpAddress,ipAddress,groupName	\
+				,rootDeviceType,rootDeviceName,eucanodeip,virtualizationType
 			
                         #  if instanceState != running "Not updating the timestamp anymore"
 			if name == "running":
@@ -215,14 +232,20 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
                                 		,keyName,amiLaunchIndex, instanceType \
                                 		,launchTime, availabilityZone	\
                                 		,kernelId,ramdiskId		\
-                                		,privateIpAddress,ipAddress	\
-                                		,rootDeviceType,rootDeviceName
+                                		,privateIpAddress,ipAddress,groupName	\
+                                		,rootDeviceType,rootDeviceName	\
+						,eucanodeip,virtualizationType
 						)
 				else:
 					print "End Event: Instance already in DB updateing timestamp"
 					updateTimestamp(instanceId)
 			else:
 				print "instance not in running state not adding to DB"
+		if  node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}value" and previous_endtag == "{http://ec2.amazonaws.com/doc/2013-02-01/}key":
+                        print "\n END tag value previous end key",previous_endtag
+			if previous_nodetext == "euca:node":
+				eucanodeip = node.text
+				print "\n eucanodeip",eucanodeip
 
 		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}reservationId":
 			reservationId = node.text
@@ -238,6 +261,11 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
                         groupId = node.text
                         #print "\n groupId :",node.text," depth:",depth
 			previous_endtag = node.tag
+                        continue
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}groupName":
+                        groupName = node.text
+                        #print "\n groupName :",node.text," depth:",depth
+                        previous_endtag = node.tag
                         continue
                 if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instanceId":
                         instanceId = node.text
@@ -321,6 +349,30 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
                         continue
 		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}blockDeviceMapping":
 			print "\n blockDeviceMapping:",node.text
+                        previous_endtag = node.tag
+                        continue
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}virtualizationType":
+			virtualizationType = node.text
+                        print "\n /virtualizationType:",node.text
+                        previous_endtag = node.tag
+                        continue
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}key":
+			key = node.text
+                        print "\n /key:",node.text
+                        previous_endtag = node.tag
+			previous_nodetext = node.text
+                        continue
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}value":
+                        value = node.text
+                        print "\n /value:",node.text
+                        previous_endtag = node.tag
+                        continue
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}iamInstanceProfile":
+                        print "\n /iamInstanceProfile:",node.text
+                        previous_endtag = node.tag
+                        continue
+                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instancesSet":
+                        print "\n /instancesSet:",node.text
                         previous_endtag = node.tag
                         continue
 
