@@ -13,5 +13,6 @@ name varchar(255),
 description varchar(255),
 rootdevicetype varchar(255),
 rootdevicename  varchar(255),
+virtualizationType varchar(255),
 CONSTRAINT "imagehistory_pkey" PRIMARY KEY (imageId )
 );
