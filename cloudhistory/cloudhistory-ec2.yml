@@ -1,6 +1,6 @@
 # ----------------------------------------------------- 
 # This playbook is for deploying the cloud history and eucalyptus reporting instance into EC2/Euca
-# TJ 7.8.2013
+# TJ 3.9.2014
 # -----------------------------------------------------
 
 - name: Stage instance
@@ -13,7 +13,7 @@
       - vars/euca-dw.yml
   tasks:
     - name: Launch instance
-      local_action: ec2 keypair={{ keypair }} group={{ security_group }} instance_type={{ instance_type }} image={{ image }} zone={{ zone}} wait=true
+      local_action: ec2 keypair={{ keypair }} group={{ security_group }} instance_type={{ instance_type }} image={{ image }} zone={{ zone}} instance_tags='{"type":"historydb"}' wait=true
       register: ec2
       
     - name: Add new instance to host group
@@ -37,41 +37,30 @@
     - name: Ensure NTP is up and running
       action: service name=ntpd state=started
 
-    - name: add search domains to resolv.conf
-      action: shell sed -i 's/^search/search eucalyptus eucalyptus.internal domain.com/' /etc/resolv.conf
-
     - name: Ensure NTP is uptodate and running
       action: command ntpdate -u {{ ntphost }}
 
     - name: Create eemon user with passwd
       action: user name=eemon home={{ eemonhome }} password=VW01cZ06C7w7g
 
-    - name: Download eucalyptus release RPM
-      action: get_url url=http://downloads.eucalyptus.com/software/eucalyptus/3.4/rhel/6/x86_64/eucalyptus-release-3.4.noarch.rpm dest=/tmp/ thirsty=yes
-    
-    - name: Download euca2ools repo RPM
-      action: get_url url=http://downloads.eucalyptus.com/software/euca2ools/3.0/centos/6/x86_64/euca2ools-release-3.0.noarch.rpm dest=/tmp/ thirsty=yes
+    - name: Download and yum install eucalyptus release RPM
+      yum: name=http://downloads.eucalyptus.com/software/eucalyptus/4.0/rhel/6/x86_64/eucalyptus-release-4.0.el6.noarch.rpm disable_gpg_check=yes
 
-    - name: download epel 6 repo
-      action: get_url url=http://downloads.eucalyptus.com/software/euca2ools/3.0/rhel/6Server/x86_64/epel-release-6.noarch.rpm dest=/tmp/ thirsty=yes
 
-    - name: Configure Eucalyptus repo
-      action: command rpm -Uvh --force /tmp/eucalyptus-release-3.4.noarch.rpm 
+    - name: Download and yum install euca2ools repo RPM
+      yum: name=http://downloads.eucalyptus.com/software/euca2ools/3.1/rhel/6/x86_64/euca2ools-release-3.1.el6.noarch.rpm disable_gpg_check=yes
 
-    - name: Configure Euca2ool v2.1 repo
-      action: command rpm -Uvh --force /tmp/euca2ools-release-3.0.noarch.rpm
-
-    - name: Configure Epel repo
-      action: command rpm -Uvh --force /tmp/epel-release-6.noarch.rpm
+    - name: download and install epel 6 repo
+      yum: name=http://downloads.eucalyptus.com/software/euca2ools/3.1/rhel/6Server/x86_64/epel-release-6.noarch.rpm disable_gpg_check=yes
 
     - name: Install Eucalyptus Reporting Archive (Data Warehouse)
-      action: yum pkg=eucadw state=latest
+      yum: name=eucadw state=latest
 
     - name: Install cloud history and other needed packages
-      action: yum pkg=python-psycopg2,openssh-clients,vim,python-argparse,bind-utils,unzip,tidy,euca2ools state=latest
+      yum: name=python-psycopg2,openssh-clients,vim,python-argparse,bind-utils,unzip,tidy,euca2ools state=latest
 
     - name: Install Cloud history query related packages
-      action: yum pkg=httpd,php,php-pgsql state=latest
+      yum: name=httpd,php,php-pgsql state=latest
 
     - name: Enable httpd on restart
       action: service name=httpd enabled=yes
@@ -182,13 +171,13 @@
       action:  template src=templates/update_instancedata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instancedata_to_db.sh owner=eemon mode=0755
 
     - name: Create eemon Cronjob for updating image data
-      action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 ${eemonhome}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
 
     - name: Create eemon Cronjob for updating account data
-      action: cron name="Update Account data" minute=26 hour="1,5,9,13,17,21" user=eemon job="timeout 720 ${eemonhome}/cloudhistory/update_accountdata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="Update Account data" minute=26 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_accountdata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
 
     - name: Create eemon Cronjob for updating instance data
-      action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 ${eemonhome}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
 
     - name: Create Cronjob for backing up the databases
       action: cron name="backup dbs" minute=30 hour="10" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} > /tmp/{{ cloudname }}.sql >/dev/null 2>&1"
@@ -225,14 +214,3 @@
 
     - name: Grant Reemon read access to eucalyptus_reporting db
       action: command su - postgres -l -c "psql eucalyptus_reporting -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
-
-# Use this section for a mail notification when instance configuration is complete. 
-# You need to set the mail_from and mail_to vars.
-#  - name: Send e-mail to admins
-#    local_action: mail
-#        from=${mail_from}
-#       to=${mail_to}
-#      subject="EC2 instance (${shortname}) ${ec2.instances[0].id}"
-#        body="EC2 instance ${ec2.instances[0].id} created on ${ec2.instances[0].public_ip}"
-
-
