@@ -56,8 +56,9 @@ description = ''
 #rootDeviceType
 rootDeviceType =''
 rootDeviceName = ''
+virtualizationType = ''
 
-def insertToDb(sampledatetime,imageId,imageLocation,imageState,imageOwnerId,isPublic,architecture,platform,imageType,name,description,rootDeviceType,rootDeviceName):
+def insertToDb(sampledatetime,imageId,imageLocation,imageState,imageOwnerId,isPublic,architecture,platform,imageType,name,description,rootDeviceType,rootDeviceName,virtualizationType):
 	if imageId == "None":
 		print " not inserting empty imageId",imageId
 		return 1
@@ -77,9 +78,10 @@ def insertToDb(sampledatetime,imageId,imageLocation,imageState,imageOwnerId,isPu
 			name,
 			description,
 			rootDeviceType,
-			rootDeviceName
+			rootDeviceName,
+			virtualizationType
 			)	
-			VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",(
+			VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);""",(
 			sampledatetime,
 			imageId,
         		imageLocation,
@@ -92,7 +94,8 @@ def insertToDb(sampledatetime,imageId,imageLocation,imageState,imageOwnerId,isPu
 			name,
 			description,
 			rootDeviceType,
-			rootDeviceName
+			rootDeviceName,
+			virtualizationType
 			)
 		)
 		#conn execute ends
@@ -132,6 +135,8 @@ def cleanCloudDataVariables():
         rootDeviceType = ''
         global rootDeviceName
         rootDeviceName = ''
+	global virtualizationType
+	virtualizationType = ''
         #print "cleanCloudDataVariables - description:",description," imageLocation:",imageLocation
 #
 # Def cleanCloudDataVariables ends
@@ -180,7 +185,7 @@ for event, node in context:
 				,imageLocation,imageState \
 				,imageOwnerId,isPublic,architecture \
 				,platform,imageType,name,description \
-				,rootDeviceType,rootDeviceName)
+				,rootDeviceType,rootDeviceName,virtualizationType)
 			else:
 				#print "End Event: Image already in imagehistory DB not inserting it again"
 				cleanCloudDataVariables()
@@ -245,6 +250,11 @@ for event, node in context:
                 if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceName":
                         rootDeviceName = node.text
                         #print "\n rootDeviceName:",node.text
+                        node.clear()
+                        continue
+		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}virtualizationType":
+                        virtualizationType = node.text
+                        print "\n virtualizationType:",node.text
                         node.clear()
                         continue
 # Close communication with the database
