@@ -105,7 +105,7 @@ def cleanCloudDataVariables():
 
 
 def AccountNotAlreadyInDb(AccountId):
-        #print "AccountNotAlreadyInDb: searching Image:",imageId," from db"
+        #print "AccountNotAlreadyInDb: searching AccountID:",AccountId," from db"
         try:
                 cursor.execute("SELECT * from accounthistory WHERE accountid=%(AccountId)s ",{'AccountId': AccountId} )
                 print "AccountNotAlreadyInDb:",cursor.statusmessage
@@ -138,25 +138,20 @@ print "\n\nConnected to database", database, "on localhost"
 for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
         if event == 'end':
                 #print "\n End tag", node.tag
-                if node.tag == "{http://iam.amazonaws.com/doc/2010-05-08/}member":
+                if node.tag == "{https://iam.amazonaws.com/doc/2010-05-08/}member":
                         print "\n\n END member", AccountId, AccountName
-                        #print "\nAll End Event: Image data from debug:\n" ,imageId \
-                        #       ,imageLocation,imageState \
-                        #       ,imageOwnerId,isPublic,architecture \
-                        #       ,platform,imageType,name \
-                        #       ,description,rootDeviceType,rootDeviceName
                         if AccountNotAlreadyInDb(AccountId):
                                 insertToDb(sampledatetime,AccountId \
                                 ,AccountName,AccountEmail)
                         #else:
-                        #       print "End Event: Image already in imagehistory DB not inserting it again"
-                if node.tag == "{http://iam.amazonaws.com/doc/2010-05-08/}AccountName":
+                        #       print "End Event: Account already in imagehistory DB not inserting it again"
+                if node.tag == "{https://iam.amazonaws.com/doc/2010-05-08/}AccountName":
                         AccountName = node.text
                         print "\n Account Name:",node.text
                         AccountEmail = getEmail(AccountName)
                         print "\n Account Email:",AccountEmail
                         continue
-                if node.tag == "{http://iam.amazonaws.com/doc/2010-05-08/}AccountId":
+                if node.tag == "{https://iam.amazonaws.com/doc/2010-05-08/}AccountId":
                         AccountId = node.text
                         print "\n Account Id:",node.text
                         continue
