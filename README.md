@@ -33,7 +33,7 @@ and store the data to postgreSQL database for further analysis of past of the cl
 Setup
 -----
 
-Expects RHEL/CENTOS6 [tested on rhel6.3 64b]
+Expects RHEL/CENTOS6 [tested on rhel6.5 64b] and Eucalyptus 4.0.1
 
 Create security group and keypair
 Modify the vars/euca-dw.yml to match your environment
