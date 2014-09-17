@@ -75,7 +75,7 @@
       action: template  src=templates/index.j2 dest=/var/www/html/index.php owner=root mode=0755
 
     - name: Install PostgreSQL 9.1
-      action: yum pkg=postgresql91-server state=latest
+      yum: name=postgresql91-server state=latest
 
     - name: allow write to  {{ pgdir }}
       action: file dest={{ pgdir }} mode=0777 owner=root group=root state=directory recurse=yes
