@@ -1,6 +1,6 @@
 # ----------------------------------------------------- 
 # This playbook is for deploying the cloud history and eucalyptus reporting instance into EC2/Euca
-# TJ 3.9.2014
+# TJ 17.12.2014
 # -----------------------------------------------------
 
 - name: Stage instance
@@ -12,6 +12,29 @@
   vars_files:
       - vars/euca-dw.yml
   tasks:
+    - name: Create (or verify that it exists) security group
+      local_action:
+        module: ec2_group
+        name: "{{ security_group }}"
+        description: admindw history db instance datawarehouse security group
+        rules:
+        - proto: icmp
+          from_port: -1
+          to_port: -1
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 8443
+          to_port: 8443
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+
     - name: Launch instance
       local_action: ec2 keypair={{ keypair }} group={{ security_group }} instance_type={{ instance_type }} image={{ image }} zone={{ zone}} instance_tags='{"type":"historydb"}' wait=true
       register: ec2
@@ -34,6 +57,9 @@
       - vars/euca-dw.yml
       
   tasks:
+    - name: Update dynamic DNS
+      shell: (echo "update delete {{cloudname}}.{{dyndnsserver}} A" ; echo "update add {{cloudname}}.{{dyndnsserver}} 0 A {{inventory_hostname}}" ; echo "send") | nsupdate
+
     - name: Ensure NTP is up and running
       action: service name=ntpd state=started
 

@@ -35,7 +35,7 @@ Setup
 
 Expects RHEL/CENTOS6 [tested on rhel6.5 64b] and Eucalyptus 4.0.1
 
-Create security group and keypair
+Create keypair for use with history instance
 Modify the vars/euca-dw.yml to match your environment
 
 Source your clouds credentials
@@ -46,16 +46,7 @@ ansible-playbook -vvv --private-key=mykey.private cloudhistory-ec2.yml
 use reemon for read only access to history db
 eemon to write access to historydb
 
-allow the access to ports you have used for your security group
-for example like this:
-
-euca-authorize -P icmp -t -1:-1 -s 0.0.0.0/0 cloudhistdw
-
-euca-authorize -P tcp -p 8443 -s 0.0.0.0/0 cloudhistdw
-
-euca-authorize -P tcp -p 22 -s 0.0.0.0/0 cloudhistdw
-
-euca-authorize -P tcp -p 80 -s 0.0.0.0/0 cloudhistdw
+Playbook will create security group and allow the access to ports 80,22,8443,ping by default
 
 Use
 ---
