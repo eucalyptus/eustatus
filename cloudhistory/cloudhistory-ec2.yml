@@ -206,7 +206,7 @@
       action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
 
     - name: Create Cronjob for backing up the databases
-      action: cron name="backup dbs" minute=30 hour="10" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} > /tmp/{{ cloudname }}.sql >/dev/null 2>&1"
+      action: cron name="backup dbs" minute=30 hour="10" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} -f /tmp/{{ cloudname }}.sql >/dev/null 2>&1"
 
     - name: Create admin creds directory
       action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/.euca_{{ cloudname }}_admin/"
