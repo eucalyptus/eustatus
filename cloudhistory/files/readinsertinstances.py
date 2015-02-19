@@ -12,7 +12,7 @@ import StringIO
 from xml.etree.ElementTree import iterparse
 import argparse
 
-sampledatetime = datetime.datetime.now()
+sampledatetime = datetime.datetime.utcnow()
 #print "sampledatetime: ",sampledatetime
 
 parser = argparse.ArgumentParser()
