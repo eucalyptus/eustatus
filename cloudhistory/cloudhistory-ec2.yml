@@ -145,11 +145,11 @@
     - name: Create the cloudhistory PostgreSQL database
       action: postgresql_db db={{ cloudname }} owner=eemon port={{ pgport }}
 
-    - name: Configure the PostgreSQL reemon user for cloud history db
-      action: postgresql_user db={{ cloudname }} user=reemon password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
+    - name: Configure the PostgreSQL $rodbusername user for cloud history db
+      action: postgresql_user db={{ cloudname }} user={{rodbusername}} password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
 
-    - name: Configure the PostgreSQL reemon user for eucalyptus_reporting db
-      action: postgresql_user db=eucalyptus_reporting user=reemon password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
+    - name: Configure the PostgreSQL $rodbusername user for eucalyptus_reporting db
+      action: postgresql_user db=eucalyptus_reporting user={{rodbusername}} password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
 
 
     - name: Restart PostgreSQL 9.1
@@ -235,8 +235,8 @@
     - name: Pausing for db to start
       action: pause seconds=30
 
-    - name: Grant Reemon read access to $cloudname db
-      action: command su - postgres -l -c "psql {{cloudname}}  -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
+    - name: Grant $rodbusername read access to $historydbname db
+      action: command su - postgres -l -c "psql {{cloudname}}  -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{rodbusername}};'" ignore_errors=yes
 
-    - name: Grant Reemon read access to eucalyptus_reporting db
-      action: command su - postgres -l -c "psql eucalyptus_reporting -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO reemon;'" ignore_errors=yes
+    - name: Grant $rodbusername read access to eucalyptus_reporting db
+      action: command su - postgres -l -c "psql eucalyptus_reporting -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{rodbusername}};'" ignore_errors=yes
