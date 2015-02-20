@@ -9,10 +9,7 @@ import os
 import string
 import psycopg2
 import datetime
-import StringIO
-from xml.etree.ElementTree import iterparse
 import argparse
-import subprocess
 import paramiko
 
 sampledatetime = datetime.datetime.now()
