@@ -1,7 +1,17 @@
-local	all	all			trust
-host	all	all	127.0.0.1/32	password
-host	all	all	::1/128		password
-host all eemon 127.0.0.1/32 trust
-host all reemon all password
-local all eemon,postgres trust
+#
+#Allow dbuser to access db from CLC with password
+host    {{histdbname}}    {{dbusername}}    {{dbaccessip}}    255.255.255.0    password
+# Allow any user on the local system to connect to any database with
+# any database user name using Unix-domain sockets (the default for local
+# connections).
+#
+# TYPE  DATABASE        USER            ADDRESS         METHOD
+local   all             all                             trust
+# The same using local loopback TCP/IP connections.
+host    all             all             127.0.0.1/32    password
 host all all ::1/128 trust
+# Allow user dbuser to access history db locally without passwd
+host    all             {{dbusername}}           127.0.0.1/32    trust
+# allow readonly access user to access db with passord from anywhere
+host    all    {{rodbusername}}    all    password
+local    all    {{dbusername}},postgres    trust
