@@ -5,7 +5,10 @@ pgdata: /ephemeral/pgsql/9.1/data
 pglog: /ephemeral/pgsql/9.1/pgstartup.log
 dbusername: eemon
 eemondbpasswd: histpasswd
+rodbusername: reemon
 reemondbpasswd: readonlypasswd
+histdbname: mycloudhistory
+dbaccessip: 10.0.0.12
 cloudname: mycloud
 keypair: admindwtest
 instance_type: m1.small
