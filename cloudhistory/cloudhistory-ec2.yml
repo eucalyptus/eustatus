@@ -142,11 +142,11 @@
     - name: Configure the PostgreSQL eemon user for cloud history db
       action: postgresql_user user=eemon password={{ eemondbpasswd }}  role_attr_flags=CREATEDB port={{ pgport }}
 
-    - name: Create the cloudhistory PostgreSQL database
-      action: postgresql_db db={{ cloudname }} owner=eemon port={{ pgport }}
+    - name: Create the cloudhistory $histdbname PostgreSQL database
+      action: postgresql_db db={{ histdbname }} owner=eemon port={{ pgport }}
 
-    - name: Configure the PostgreSQL $rodbusername user for cloud history db
-      action: postgresql_user db={{ cloudname }} user={{rodbusername}} password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
+    - name: Configure the PostgreSQL $rodbusername user for cloud history db $histdbname
+      action: postgresql_user db={{ histdbname }} user={{rodbusername}} password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
 
     - name: Configure the PostgreSQL $rodbusername user for eucalyptus_reporting db
       action: postgresql_user db=eucalyptus_reporting user={{rodbusername}} password={{ reemondbpasswd }} priv=ALL port={{ pgport }}
@@ -201,19 +201,19 @@
       action: template src=templates/update_instanceloaddata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instanceloaddata_to_db.sh owner=eemon mode=0755
 
     - name: Create eemon Cronjob for updating image data
-      action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} {{ histdbname }} >/dev/null 2>&1"
 
     - name: Create eemon Cronjob for updating account data
-      action: cron name="Update Account data" minute=26 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_accountdata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="Update Account data" minute=26 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_accountdata_to_db.sh {{ cloudname }} {{ histdbname }} >/dev/null 2>&1"
 
     - name: Create eemon Cronjob for updating instance data
-      action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} {{ histdbname }} >/dev/null 2>&1"
 
     - name: Create eemon Cronjob for updating load instance data
       action: cron name="Update Instance load data" minute="*/15" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instanceloaddata_to_db.sh {{ cloudname }} {{ histdbname }}  >/dev/null 2>&1"
 
     - name: Create postgres user Cronjob for backing up the databases
-      action: cron name="backup dbs" minute=30 hour="3" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} -f {{ dbdumpdir }}/{{ cloudname }}.sql >/dev/null 2>&1"
+      action: cron name="backup dbs" minute=30 hour="3" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} -f {{ dbdumpdir }}/{{ histdbname }}.sql >/dev/null 2>&1"
 
     - name: Create admin creds directory
       action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/.euca_{{ cloudname }}_admin/"
@@ -228,22 +228,22 @@
       action: command su - eemon -l -c "touch {{eemonhome}}/cloudhistory/{{ cloudname }}_tidy_images.xml"
 
     - name: First time run account data collecttion
-      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }} {{ histdbname }}"  ignore_errors=yes
 
     - name: First time run of image data collecttion
-      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }} {{ histdbname }}" ignore_errors=yes
 
     - name: Second time run account data collecttion
-      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }}"  ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }} {{ histdbname }}"  ignore_errors=yes
 
     - name: Second time run of image data collecttion
-      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }}" ignore_errors=yes
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }} {{ histdbname }}" ignore_errors=yes
 
     - name: Pausing for db to start
       action: pause seconds=30
 
     - name: Grant $rodbusername read access to $historydbname db
-      action: command su - postgres -l -c "psql {{cloudname}}  -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{rodbusername}};'" ignore_errors=yes
+      action: command su - postgres -l -c "psql {{ histdbname }}  -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{rodbusername}};'" ignore_errors=yes
 
     - name: Grant $rodbusername read access to eucalyptus_reporting db
       action: command su - postgres -l -c "psql eucalyptus_reporting -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{rodbusername}};'" ignore_errors=yes

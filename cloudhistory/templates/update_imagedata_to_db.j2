@@ -1,15 +1,16 @@
 #/bin/sh
-if [ $# -lt 1 ]
+if [ $# -lt 2 ]
 then
-        echo "Usage : update_imagedata_to_db.sh <cloudname>"
+        echo "Usage : update_imagedata_to_db.sh <cloudname> <dbname>"
         exit 1
 else
         export http_proxy=
         CLOUDNAME=$1
+	DBNAME=$2
         source {{ eemonhome }}/cloudhistory/.euca_$CLOUDNAME\_admin/eucarc
         euca-describe-images -a --debug 2> {{ eemonhome }}/cloudhistory/euca-describe-images_$CLOUDNAME\.xml
         tidy -xml -i -q -w 0 -o {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_images.xml < {{ eemonhome }}/cloudhistory/euca-describe-images_$CLOUDNAME\.xml
         sed -i 1i"<root>" $CLOUDNAME\_tidy_images.xml
         echo "</root>" >> $CLOUDNAME\_tidy_images.xml
-        {{ eemonhome }}/cloudhistory/readinsertimages.py -n $CLOUDNAME -p {{ eemondbpasswd }} -port={{ pgport }} -x {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_images.xml
+        {{ eemonhome }}/cloudhistory/readinsertimages.py -n $DBNAME -p {{ eemondbpasswd }} -port={{ pgport }} -x {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_images.xml
 fi
