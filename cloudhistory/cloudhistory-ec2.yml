@@ -213,7 +213,7 @@
       action: cron name="Update Instance load data" minute="*/15" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instanceloaddata_to_db.sh {{ cloudname }} {{ histdbname }}  >/dev/null 2>&1"
 
     - name: Create postgres user Cronjob for backing up the databases
-      action: cron name="backup dbs" minute=30 hour="3" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} -f {{ dbdumpdir }}/{{ histdbname }}.sql >/dev/null 2>&1"
+      action: cron name="backup dbs" minute=30 hour="3" user=postgres job="timeout 3600 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} -f {{ dbdumpdir }}/{{ histdbname }}.sql >/dev/null 2>&1"
 
     - name: Create admin creds directory
       action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/.euca_{{ cloudname }}_admin/"
@@ -227,16 +227,19 @@
     - name:  Create result XML file by touch for image data collection
       action: command su - eemon -l -c "touch {{eemonhome}}/cloudhistory/{{ cloudname }}_tidy_images.xml"
 
-    - name: First time run account data collecttion
+    - name: First time run account data collection
       action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }} {{ histdbname }}"  ignore_errors=yes
 
-    - name: First time run of image data collecttion
+    - name: First time run of image data collection
       action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }} {{ histdbname }}" ignore_errors=yes
 
-    - name: Second time run account data collecttion
+    - name: First time run of instance load data collection
+      action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_instanceloaddata_to_db.sh {{ cloudname }} {{ histdbname }}" ignore_errors=yes
+
+    - name: Second time run account data collection
       action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_accountdata_to_db.sh {{ cloudname }} {{ histdbname }}"  ignore_errors=yes
 
-    - name: Second time run of image data collecttion
+    - name: Second time run of image data collection
       action: command su - eemon -l -c "cd {{eemonhome}}/cloudhistory;./update_imagedata_to_db.sh {{ cloudname }} {{ histdbname }}" ignore_errors=yes
 
     - name: Pausing for db to start
