@@ -21,3 +21,4 @@ adminzipdir: /root/.euca
 backupserver: mybackupserver.domain.com
 zone: mycloud_1
 dyndnsserver: dyn.com
+virttopxmladdress: www.myweb.fi
