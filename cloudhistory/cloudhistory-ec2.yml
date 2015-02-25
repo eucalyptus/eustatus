@@ -58,7 +58,7 @@
       
   tasks:
     - name: Update dynamic DNS
-      shell: (echo "update delete {{cloudname}}.{{dyndnsserver}} A" ; echo "update add {{cloudname}}.{{dyndnsserver}} 0 A {{inventory_hostname}}" ; echo "send") | nsupdate
+      shell: (echo "update delete {{cloudname}}history.{{dyndnsserver}} A" ; echo "update add {{cloudname}}history.{{dyndnsserver}} 0 A {{inventory_hostname}}" ; echo "send") | nsupdate
 
     - name: Ensure NTP is up and running
       action: service name=ntpd state=started
