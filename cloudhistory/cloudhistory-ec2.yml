@@ -186,6 +186,7 @@
       - readinsertinstances.py
       - readinsertimages.py
       - readinsertaccounts.py
+      - readinsertinstanceload.py
 
     - name: Copy templated accountdata cronjob scripts to instance 
       action:  template src=templates/update_accountdata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_accountdata_to_db.sh owner=eemon mode=0755
@@ -197,7 +198,7 @@
       action:  template src=templates/update_instancedata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instancedata_to_db.sh owner=eemon mode=0755
 
     - name: Copy templated instance load data scripts to instance
-      action: template src=update_instanceloaddata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instanceloaddata_to_db.sh owner=eemon mode=0755
+      action: template src=templates/update_instanceloaddata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instanceloaddata_to_db.sh owner=eemon mode=0755
 
     - name: Create eemon Cronjob for updating image data
       action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"

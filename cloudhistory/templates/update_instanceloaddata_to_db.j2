@@ -8,7 +8,7 @@ else
         export http_proxy=
         CLOUDNAME=$1
         DBNAME=$2
-        cd {{eemohome}}/cloudhistory/
+        cd {{eemonhome}}/cloudhistory/
         curl -s -o $CLOUDNAME\load.xml http://{{ virttopxmladdress }}/fillrate/historyxml.php?cloud=$CLOUDNAME
         {{ eemonhome }}/cloudhistory/readinsertinstanceload.py -n $DBNAME -p {{ eemondbpasswd }} -u {{ dbusername }} -port={{ pgport }} -x {{ eemonhome }}/cloudhistory/$CLOUDNAME\load.xml
 fi
