@@ -9,6 +9,7 @@ rodbusername: reemon
 reemondbpasswd: readonlypasswd
 histdbname: mycloudhistory
 dbaccessip: 10.0.0.12
+dbdumpdir: /tmp
 cloudname: mycloud
 keypair: admindwtest
 instance_type: m1.small
