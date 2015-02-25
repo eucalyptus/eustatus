@@ -1,0 +1,11 @@
+<root>
+<item>
+<InstanceId>i-65e245af</InstanceId>
+<Time>2015-02-23T07:48:37.000Z</Time>
+<CpuLoad>0.10</CpuLoad>
+<ReadRequests>0</ReadRequests>
+<WriteRequests>3</WriteRequests>
+<NetRxBytes>0</NetRxBytes>
+<NetTxBytes>0</NetTxBytes>
+<Mem>47.0</Mem>
+</root>
