@@ -161,7 +161,7 @@
       - create_accounts_table.sql
       - create_images_table.sql
       - create_instance_table.sql
-      - create_cloudstatus_table.sql
+      - create_instance_load_table.sql
 
     - name:  Create tables to cloud history $cloudname database
       action: command su - eemon -l -c "psql -p {{ pgport }}  {{ cloudname }} -f {{ item }}"
@@ -169,13 +169,13 @@
       - create_accounts_table.sql
       - create_images_table.sql
       - create_instance_table.sql
-      - create_cloudstatus_table.sql
+      - create_instance_load_table.sql 
 
     - name: Copy template move database dump script
       action: template src=templates/move_db_dump.j2 dest=/root/move_db_dump.sh owner=root mode=0755
 
     - name: Create Cronjob for moving backup file
-      action: cron name="move backups" minute=30 hour="5" user=root job="timeout 720 /root/move_db_dump.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="move backups" minute=30 hour="5" user=root job="timeout 3600 /root/move_db_dump.sh {{ cloudname }} >/dev/null 2>&1"
 
     - name: Create cloudhistory directory
       action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/"
@@ -196,6 +196,9 @@
     - name: Copy templated instancedata cronjob scripts to instance
       action:  template src=templates/update_instancedata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instancedata_to_db.sh owner=eemon mode=0755
 
+    - name: Copy templated instance load data scripts to instance
+      action: template src=update_instanceloaddata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instanceloaddata_to_db.sh owner=eemon mode=0755
+
     - name: Create eemon Cronjob for updating image data
       action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
 
@@ -205,8 +208,11 @@
     - name: Create eemon Cronjob for updating instance data
       action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} >/dev/null 2>&1"
 
-    - name: Create Cronjob for backing up the databases
-      action: cron name="backup dbs" minute=30 hour="10" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} -f /tmp/{{ cloudname }}.sql >/dev/null 2>&1"
+    - name: Create eemon Cronjob for updating load instance data
+      action: cron name="Update Instance load data" minute="*/15" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instanceloaddata_to_db.sh {{ cloudname }} {{ histdbname }}  >/dev/null 2>&1"
+
+    - name: Create postgres user Cronjob for backing up the databases
+      action: cron name="backup dbs" minute=30 hour="3" user=postgres job="timeout 720 /usr/pgsql-9.1/bin/pg_dumpall -p {{ pgport }} -f {{ dbdumpdir }}/{{ cloudname }}.sql >/dev/null 2>&1"
 
     - name: Create admin creds directory
       action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/.euca_{{ cloudname }}_admin/"
