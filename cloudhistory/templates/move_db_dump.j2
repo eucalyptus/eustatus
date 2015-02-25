@@ -8,7 +8,7 @@ else
 CLOUDNAME=$1
 DATE=`date +%Y%m%d%H`
 BACKUP_SERVER={{ backupserver }}
-gzip -9 -f /tmp/$CLOUDNAME\.sql
-scp /tmp/$CLOUDNAME\.sql.gz $BACKUP_SERVER\:/opt/cloudbackup/$CLOUDNAME\_$DATE\.sql.gz
-rm -f /tmp/$CLOUDNAME\.sql.gz
+gzip -9 -f {{ dbdumpdir }}/$CLOUDNAME\.sql
+scp {{ dbdumpdir }}/$CLOUDNAME\.sql.gz $BACKUP_SERVER\:/opt/cloudbackup/$CLOUDNAME\_$DATE\.sql.gz
+rm -f {{ dbdumpdir }}/$CLOUDNAME\.sql.gz
 fi
