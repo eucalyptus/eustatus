@@ -163,8 +163,8 @@
       - create_instance_table.sql
       - create_instance_load_table.sql
 
-    - name:  Create tables to cloud history $cloudname database
-      action: command su - eemon -l -c "psql -p {{ pgport }}  {{ cloudname }} -f {{ item }}"
+    - name:  Create tables to cloud history $histdbname database
+      action: command su - eemon -l -c "psql -p {{ pgport }}  {{ histdbname }} -f {{ item }}"
       with_items:
       - create_accounts_table.sql
       - create_images_table.sql
