@@ -209,6 +209,9 @@
     - name: Create eemon Cronjob for updating instance data
       action: cron name="Update Instance data" minute="0-59" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instancedata_to_db.sh {{ cloudname }} {{ histdbname }} >/dev/null 2>&1"
 
+    - name: Create eemon Cronjob for updating instancetype data
+      action: cron name="Update Instancetype data" minute="54" hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instancetypedata_to_db.sh {{ cloudname }} {{ histdbname }} >/dev/null 2>&1"
+
     - name: Create eemon Cronjob for updating load instance data
       action: cron name="Update Instance load data" minute="*/15" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_instanceloaddata_to_db.sh {{ cloudname }} {{ histdbname }}  >/dev/null 2>&1"
 
