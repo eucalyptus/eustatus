@@ -98,7 +98,7 @@ def imageHasProductName(imageId):
 
 def findRunningEmi(imageId):
 	try:
-               	cursor.execute("select imageid,eucanodeip,instanceid from instancehistory where instancehistory.imageid = %(imageId)s and instancehistory.sampledatetime BETWEEN (now() - '10 minutes '::interval)::timestamp AND now() limit 1",{'imageId': imageId} )
+               	cursor.execute("select imageid,eucanodeip,instanceid from instancehistory where instancehistory.imageid = %(imageId)s and instancehistory.sampledatetime BETWEEN ( timezone('UTC',now() ) - '10 minutes '::interval)::timestamp AND timezone('UTC', now() ) limit 1",{'imageId': imageId} )
                	row = cursor.fetchone()
                 if row == None:
                         print "findRunningEmi: NO runing instance for imageId:",imageId," row:",row ," Found"
