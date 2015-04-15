@@ -90,7 +90,7 @@ def imageHasProductName(imageId):
 			return 1
 	except:
 		e = sys.exc_info()[0]
-		print "imageNotAlreadyInDb: exception occurred: ",e
+		print "imageHasProductName: exception occurred: ",e
 		return 0
 #
 # is Image had ProductName def ends
