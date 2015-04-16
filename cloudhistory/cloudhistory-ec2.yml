@@ -162,6 +162,7 @@
       - create_images_table.sql
       - create_instance_table.sql
       - create_instance_load_table.sql
+      - create_instancetypes_table.sql
 
     - name:  Create tables to cloud history $histdbname database
       action: command su - eemon -l -c "psql -p {{ pgport }}  {{ histdbname }} -f {{ item }}"
@@ -170,6 +171,7 @@
       - create_images_table.sql
       - create_instance_table.sql
       - create_instance_load_table.sql 
+      - create_instancetypes_table.sql
 
     - name: Copy template move database dump script
       action: template src=templates/move_db_dump.j2 dest=/root/move_db_dump.sh owner=root mode=0755
@@ -187,6 +189,7 @@
       - readinsertimages.py
       - readinsertaccounts.py
       - readinsertinstanceload.py
+      - readinsertinstancetypes.py
 
     - name: Copy templated accountdata cronjob scripts to instance 
       action:  template src=templates/update_accountdata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_accountdata_to_db.sh owner=eemon mode=0755
@@ -199,6 +202,9 @@
 
     - name: Copy templated instance load data scripts to instance
       action: template src=templates/update_instanceloaddata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instanceloaddata_to_db.sh owner=eemon mode=0755
+
+    - name: Copy templated instance type data scripts to instance
+      action: template src=templates/update_instancetypedata_to_db.j2 dest={{ eemonhome }}/cloudhistory/update_instancetypedata_to_db.sh owner=eemon mode=0755
 
     - name: Create eemon Cronjob for updating image data
       action: cron name="Update Imagedata" minute=36 hour="1,5,9,13,17,21" user=eemon job="timeout 720 {{eemonhome}}/cloudhistory/update_imagedata_to_db.sh {{ cloudname }} {{ histdbname }} >/dev/null 2>&1"
