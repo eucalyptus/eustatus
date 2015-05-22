@@ -36,7 +36,9 @@ Setup
 Expects RHEL/CENTOS6 [tested on rhel6.5 64b] and Eucalyptus 4.0.1
 
 Create keypair for use with history instance
-
+ #euca-create-keypair admindw > admindw.private
+ #chmod 0600 admindw.private
+ 
 Modify the vars/euca-dw.yml to match your environment
 
 Source your clouds credentials
