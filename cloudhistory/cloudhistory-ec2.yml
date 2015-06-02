@@ -68,8 +68,9 @@
 
     - name: Create eemon user with passwd
       action: user name=eemon home={{ eemonhome }} password=VW01cZ06C7w7g
-    - name: create sshkey for root
-      action: shell 'ssh-keygen -t rsa -b 2048 -N "" -f /root/.ssh/id_rsa'
+    
+    #- name: create sshkey for root
+    #  action: shell 'ssh-keygen -t rsa -b 2048 -N "" -f /root/.ssh/id_rsa'
       
     - name: Download and yum install eucalyptus release RPM
       yum: name=http://downloads.eucalyptus.com/software/eucalyptus/4.0/rhel/6/x86_64/eucalyptus-release-4.0.el6.noarch.rpm disable_gpg_check=yes
