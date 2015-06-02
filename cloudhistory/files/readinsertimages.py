@@ -32,6 +32,7 @@ cloudhistoryxmlpath=args.pathtotidyxmlfile
 
 #print "name pw port user xml",database,dbPasswd,dbPort,dbUser,cloudhistoryxmlpath
 
+xmlschemaversion='2014-06-15'
 
 # Image  EMI id
 imageId = 'None'
@@ -179,7 +180,7 @@ for event, node in context:
 		root = node	# the first element is root
         if event == 'end':
                 #print "\n End tag", node.tag
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}item":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}item":
 			if imageNotAlreadyInDb(imageId):
 				insertToDb(sampledatetime,imageId \
 				,imageLocation,imageState \
@@ -192,67 +193,67 @@ for event, node in context:
 				#print "End Tag Clearing root and node at item end"
 				node.clear()
 				root.clear()
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}imageId":
                         imageId = node.text
                         #print "\n imageId:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageLocation":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}imageLocation":
                         imageLocation = node.text
                         #print "\n imageLocation:",node.text," Node tag",node.tag
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageState":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}imageState":
                         imageState = node.text
                         #print "\n imageState:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageOwnerId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}imageOwnerId":
                         imageOwnerId = node.text
                         #print "\n imageOwnerId:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}isPublic":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}isPublic":
                         isPublic = node.text
                         #print "\n isPublic:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}architecture":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}architecture":
                         architecture = node.text
                         #print "\n architecture:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}platform":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}platform":
                         platform = node.text
                         #print "\n platform ",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}imageType":
                         imageType = node.text
                         #print "\n imageType:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}name":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}name":
                         name = node.text
                         #print "\n name:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}description":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}description":
                         description = node.text
                         #print "\n description:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}rootDeviceType":
                         rootDeviceType = node.text
                         #print "\n rootDeviceType:",node.text
                         node.clear()
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceName":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}rootDeviceName":
                         rootDeviceName = node.text
                         #print "\n rootDeviceName:",node.text
                         node.clear()
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}virtualizationType":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}virtualizationType":
                         virtualizationType = node.text
                         print "\n virtualizationType:",node.text
                         node.clear()

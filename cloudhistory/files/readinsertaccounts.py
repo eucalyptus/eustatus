@@ -31,7 +31,8 @@ dbUser=args.databaseusername
 cloudhistoryxmlpath=args.pathtotidyxmlfile
 
 #print "name pw port user xml",database,dbPasswd,dbPort,dbUser,cloudhistoryxmlpath
-#exit()
+
+xmlschemaversion='2010-05-08'
 
 # account id
 AccountId = ''
@@ -138,20 +139,20 @@ print "\n\nConnected to database", database, "on localhost"
 for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
         if event == 'end':
                 #print "\n End tag", node.tag
-                if node.tag == "{https://iam.amazonaws.com/doc/2010-05-08/}member":
+                if node.tag == "{https://iam.amazonaws.com/doc/"+xmlschemaversion+"/}member":
                         print "\n\n END member", AccountId, AccountName
                         if AccountNotAlreadyInDb(AccountId):
                                 insertToDb(sampledatetime,AccountId \
                                 ,AccountName,AccountEmail)
                         #else:
                         #       print "End Event: Account already in imagehistory DB not inserting it again"
-                if node.tag == "{https://iam.amazonaws.com/doc/2010-05-08/}AccountName":
+                if node.tag == "{https://iam.amazonaws.com/doc/"+xmlschemaversion+"/}AccountName":
                         AccountName = node.text
                         print "\n Account Name:",node.text
                         AccountEmail = getEmail(AccountName)
                         print "\n Account Email:",AccountEmail
                         continue
-                if node.tag == "{https://iam.amazonaws.com/doc/2010-05-08/}AccountId":
+                if node.tag == "{https://iam.amazonaws.com/doc/"+xmlschemaversion+"/}AccountId":
                         AccountId = node.text
                         print "\n Account Id:",node.text
                         continue

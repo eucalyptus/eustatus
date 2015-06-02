@@ -31,6 +31,7 @@ dbPort=args.databaseport
 dbUser=args.databaseusername
 cloudhistoryxmlpath=args.pathtotidyxmlfile
 
+xmlschemaversion='2014-06-15'
 # Instance data
 reservationId = ''
 # Owner Account Id
@@ -64,7 +65,7 @@ key = ''
 value = ''
 virtualizationType = ''
 
-previous_endtag = "{http://ec2.amazonaws.com/doc/2013-02-01/}groupId"
+previous_endtag = "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}groupId"
 previous_nodetext = "empty"
 
 def insertToDb(rervationId,reservationId,ownerId,groupId,instanceId,imageId,name,privateDnsName,dnsName,keyName,amiLaunchIndex,instanceType,launchTime,availabilityZone,kernelId,ramdiskId,privateIpAddress,ipAddress,groupName,rootDeviceType,rootDeviceName,eucanodeip,virtualizationType):
@@ -210,7 +211,7 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
 	# Start Event in iterparse <some tag>
 	if event == 'end':
 		print "\n End tag", node.tag, " Previous tag: ",previous_endtag
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instancesSet":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}instancesSet":
 			print "\n\n\n\n END instance previous end event tag",previous_endtag
 			print "All instance data",reservationId \
 				,ownerId,groupId		\
@@ -241,137 +242,137 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
 					updateTimestamp(instanceId)
 			else:
 				print "instance not in running state not adding to DB"
-		if  node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}value" and previous_endtag == "{http://ec2.amazonaws.com/doc/2013-02-01/}key":
+		if  node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}value" and previous_endtag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}key":
                         print "\n END tag value previous end key",previous_endtag
 			if previous_nodetext == "euca:node":
 				eucanodeip = node.text
 				print "\n eucanodeip",eucanodeip
 
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}reservationId":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}reservationId":
 			reservationId = node.text
                         #print "\n reservationId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}ownerId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}ownerId":
                         ownerId = node.text
                         #print "\n ownerId :",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}groupId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}groupId":
                         groupId = node.text
                         #print "\n groupId :",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}groupName":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}groupName":
                         groupName = node.text
                         #print "\n groupName :",node.text," depth:",depth
                         previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instanceId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}instanceId":
                         instanceId = node.text
                         #print "\n instanceId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}imageId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}imageId":
                         imageId = node.text
                         #print "\n imageId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}name":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}name":
                         name = node.text
                         print "\n name:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}privateDnsName":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}privateDnsName":
                         privateDnsName = node.text
                         #print "\n privateDnsName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}dnsName":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}dnsName":
                         dnsName = node.text
                         #print "\n dnsName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}keyName":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}keyName":
                         keyName = node.text
                         #print "\n keyName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}amiLaunchIndex":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}amiLaunchIndex":
                         amiLaunchIndex = node.text
                         #print "\n amiLaunchIndex:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instanceType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}instanceType":
                         instanceType = node.text
                         #print "\n instanceType ",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}launchTime":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}launchTime":
                         launchTime = node.text
                         #print "\n launchTime:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}availabilityZone":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}availabilityZone":
                         availabilityZone = node.text
                         #print "\n availabilityZone:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}kernelId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}kernelId":
                         kernelId = node.text
                         #print "\n kernelId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}ramdiskId":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}ramdiskId":
                         ramdiskId = node.text
                         #print "\n ramdiskId:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}privateIpAddress":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}privateIpAddress":
                         privateIpAddress = node.text
                         #print "\n privateIpAddress:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}ipAddress":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}ipAddress":
                         ipAddress = node.text
                         #print "\n ipAddress:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceType":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}rootDeviceType":
                         rootDeviceType = node.text
                         #print "\n rootDeviceType:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}rootDeviceName":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}rootDeviceName":
                         rootDeviceName = node.text
                         #print "\n rootDeviceName:",node.text," depth:",depth
 			previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}blockDeviceMapping":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}blockDeviceMapping":
 			print "\n blockDeviceMapping:",node.text
                         previous_endtag = node.tag
                         continue
-		if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}virtualizationType":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}virtualizationType":
 			virtualizationType = node.text
                         print "\n /virtualizationType:",node.text
                         previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}key":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}key":
 			key = node.text
                         print "\n /key:",node.text
                         previous_endtag = node.tag
 			previous_nodetext = node.text
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}value":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}value":
                         value = node.text
                         print "\n /value:",node.text
                         previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}iamInstanceProfile":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}iamInstanceProfile":
                         print "\n /iamInstanceProfile:",node.text
                         previous_endtag = node.tag
                         continue
-                if node.tag == "{http://ec2.amazonaws.com/doc/2013-02-01/}instancesSet":
+                if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}instancesSet":
                         print "\n /instancesSet:",node.text
                         previous_endtag = node.tag
                         continue
