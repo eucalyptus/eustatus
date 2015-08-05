@@ -11,5 +11,5 @@ else
         source {{ eemonhome }}/cloudhistory/.euca_$CLOUDNAME\_admin/eucarc
         euca-describe-instance-types --debug 2> {{ eemonhome }}/cloudhistory/euca-describe-instancetypes_$CLOUDNAME\.xml
         tidy -xml -i -q -w 0 -o  {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_instancetypes.xml <  {{ eemonhome }}/cloudhistory/euca-describe-instancetypes_$CLOUDNAME\.xml
-        {{ eemonhome }}/cloudhistory/readinsertinstancetypes.py -n $DBNAME -p {{ eemondbpasswd }} -port={{ pgport }} -x {{ eemonhome }}/$CLOUDNAME\_tidy_instancetypes.xml
+        {{ eemonhome }}/cloudhistory/readinsertinstancetypes.py -n $DBNAME -p {{ eemondbpasswd }} -port={{ pgport }} -x {{ eemonhome }}/cloudhistory/$CLOUDNAME\_tidy_instancetypes.xml
 fi
