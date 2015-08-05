@@ -107,10 +107,10 @@ def insertToDb(rervationId,reservationId,ownerId,groupId,instanceId,imageId,name
 
 def cleanCloudDataVariables():
 	#print "cleanCloudDataVariables - :rootDeviceName",rootDeviceName
-	global reservationId
-	reservationId = ''
-	global ownerId
-	ownerId = ''
+	#global reservationId
+	#reservationId = ''
+	#global ownerId
+	#ownerId = ''
 	global groupId
 	groupId = ''
 	global groupName
