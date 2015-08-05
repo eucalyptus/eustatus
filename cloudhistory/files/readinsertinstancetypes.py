@@ -11,14 +11,16 @@ import argparse
 # tidy -xml -i -q  -w 0 -o tidy_instancetypes.xml < instancetypes.xml
 
 # Node tags in instancetypes XML
-INSTANCE_TYPE_NAME= "{http://ec2.amazonaws.com/doc/2013-02-01/}name"
-INSTANCE_TYPE_CPU= "{http://ec2.amazonaws.com/doc/2013-02-01/}cpu"
-INSTANCE_TYPE_MEMORY= "{http://ec2.amazonaws.com/doc/2013-02-01/}memory"
-INSTANCE_TYPE_DISK= "{http://ec2.amazonaws.com/doc/2013-02-01/}disk"
+#xmlschemaversion='2013-02-01'
+xmlschemaversion='2014-06-15'
+INSTANCE_TYPE_NAME= "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}name"
+INSTANCE_TYPE_CPU= "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}cpu"
+INSTANCE_TYPE_MEMORY= "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}memory"
+INSTANCE_TYPE_DISK= "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}disk"
 #Not used currently
-INSTANCE_TYPE_AVAILABILITY=  "{http://ec2.amazonaws.com/doc/2013-02-01/}availability"
+INSTANCE_TYPE_AVAILABILITY=  "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}availability"
 #Not used currently
-INSTANCE_TYPE_EPHEMERALDISK= "{http://ec2.amazonaws.com/doc/2013-02-01/}ephemeralDisk"
+INSTANCE_TYPE_EPHEMERALDISK= "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}ephemeralDisk"
 
 ## Database args
 dbhost="127.0.0.1"
@@ -80,7 +82,7 @@ def processFromXml(rawXml):
 					memory_mb = int(node.text)
 				if node.tag == INSTANCE_TYPE_NAME:
 					instancetype = node.text
-				if node.tag =="{http://ec2.amazonaws.com/doc/2013-02-01/}item":
+				if node.tag =="{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}item":
 					its = InstanceTypeSample(instancetype,corecount,memory_mb,diskspace_gb)
 					instanceTypesInXml[its.instancetype] = its
 					instancetype=''
