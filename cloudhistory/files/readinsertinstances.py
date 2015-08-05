@@ -211,7 +211,7 @@ for (event, node) in iterparse(cloudhistoryxmlpath, ['start', 'end']):
 	# Start Event in iterparse <some tag>
 	if event == 'end':
 		print "\n End tag", node.tag, " Previous tag: ",previous_endtag
-		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}instancesSet":
+		if node.tag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}item" and previous_endtag == "{http://ec2.amazonaws.com/doc/"+xmlschemaversion+"/}iamInstanceProfile":
 			print "\n\n\n\n END instance previous end event tag",previous_endtag
 			print "All instance data",reservationId \
 				,ownerId,groupId		\
