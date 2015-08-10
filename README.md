@@ -33,7 +33,7 @@ and store the data to postgreSQL database for further analysis of past of the cl
 Setup
 -----
 
-Expects RHEL/CENTOS6 [tested on rhel6.6 64b] and Eucalyptus 4.1.1
+Expects RHEL/CENTOS6 [tested on rhel6.6 64b] and Eucalyptus 4.1.2
 
 Create keypair for use with history instance<br>
  #euca-create-keypair admindw > admindw.private<br>
