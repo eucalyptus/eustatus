@@ -1,6 +1,6 @@
 # ----------------------------------------------------- 
 # This playbook is for deploying the cloud history and eucalyptus reporting instance into EC2/Euca
-# TJ 17.12.2014
+# TJ 14.8.2015
 # -----------------------------------------------------
 
 - name: Stage instance
@@ -72,14 +72,14 @@
     #- name: create sshkey for root
     #  action: shell 'ssh-keygen -t rsa -b 2048 -N "" -f /root/.ssh/id_rsa'
       
-    - name: Download and yum install eucalyptus release RPM
-      yum: name=http://downloads.eucalyptus.com/software/eucalyptus/4.0/rhel/6/x86_64/eucalyptus-release-4.0.el6.noarch.rpm disable_gpg_check=yes
+    - name: Download and yum install Eucalyptus release RPM
+      yum: name=http://downloads.eucalyptus.com/software/eucalyptus/4.1/centos/6/x86_64/eucalyptus-release-4.1.el6.noarch.rpm disable_gpg_check=yes
 
     - name: Download and yum install euca2ools repo RPM
-      yum: name=http://downloads.eucalyptus.com/software/euca2ools/3.1/rhel/6/x86_64/euca2ools-release-3.1.el6.noarch.rpm disable_gpg_check=yes
+      yum: name=http://downloads.eucalyptus.com/software/euca2ools/3.2/centos/6/x86_64/euca2ools-release-3.2.el6.noarch.rpm disable_gpg_check=yes
 
     - name: download and install epel 6 repo
-      yum: name=http://downloads.eucalyptus.com/software/euca2ools/3.1/rhel/6Server/x86_64/epel-release-6.noarch.rpm disable_gpg_check=yes
+      yum: name=http://downloads.eucalyptus.com/software/euca2ools/3.2/centos/6/x86_64/epel-release-6.noarch.rpm disable_gpg_check=yes
 
     - name: Install Eucalyptus Reporting Archive (Data Warehouse)
       yum: name=eucadw state=latest
