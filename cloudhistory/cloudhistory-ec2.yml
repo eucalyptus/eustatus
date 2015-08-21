@@ -60,10 +60,10 @@
     - name: Update dynamic DNS
       shell: (echo "update delete {{cloudname}}history.{{dyndnsserver}} A" ; echo "update add {{cloudname}}history.{{dyndnsserver}} 0 A {{inventory_hostname}}" ; echo "send") | nsupdate
 
-    - name: Ensure NTP is up and running
+    - name: Ensure NTP daemon is up and running
       action: service name=ntpd state=started
 
-    - name: Ensure NTP is uptodate and running
+    - name: Ensure NTP is uptodate
       action: command ntpdate -u {{ ntphost }}
 
     - name: Create eemon user with passwd
