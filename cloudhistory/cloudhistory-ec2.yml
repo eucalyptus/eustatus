@@ -36,7 +36,7 @@
           cidr_ip: 0.0.0.0/0
 
     - name: Launch instance
-      local_action: ec2 keypair={{ keypair }} group={{ security_group }} instance_type={{ instance_type }} image={{ image }} zone={{ zone}} instance_tags='{"type":"historydb"}' wait=true
+      local_action: ec2 keypair={{ keypair }} group={{ security_group }} instance_type={{ instance_type }} image={{ image }} zone={{ zone}} instance_tags='{"type":"historydb"}' wait_timeout=400 wait=true
       register: ec2
       
     - name: Add new instance to host group
@@ -57,9 +57,6 @@
       - vars/euca-dw.yml
       
   tasks:
-    - name: Update dynamic DNS
-      shell: (echo "update delete {{cloudname}}history.{{dyndnsserver}} A" ; echo "update add {{cloudname}}history.{{dyndnsserver}} 0 A {{inventory_hostname}}" ; echo "send") | nsupdate
-
     - name: Ensure NTP daemon is up and running
       action: service name=ntpd state=started
 
@@ -68,7 +65,8 @@
 
     - name: Create eemon user with passwd
       action: user name=eemon home={{ eemonhome }} password=VW01cZ06C7w7g
-    
+    # if we have ansible 1.9 installed we can say
+    # user: name={{ monitorusername }} home={{ eemonhome }} password={{ eemonpassword |password_hash('sha512') }}
     #- name: create sshkey for root
     #  action: shell 'ssh-keygen -t rsa -b 2048 -N "" -f /root/.ssh/id_rsa'
       
@@ -261,3 +259,6 @@
 
     - name: Grant $rodbusername read access to eucalyptus_reporting db
       action: command su - postgres -l -c "psql eucalyptus_reporting -p {{ pgport }} -c 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO {{rodbusername}};'" ignore_errors=yes
+
+    - name: Finally update dynamic DNS to point to the new historyDB instance
+      shell: (echo "update delete {{cloudname}}history.{{dyndnsserver}} A" ; echo "update add {{cloudname}}history.{{dyndnsserver}} 0 A {{inventory_hostname}}" ; echo "send") | nsupdate
