@@ -3,6 +3,7 @@ pgport: 8443
 pgdir: /ephemeral
 pgdata: /ephemeral/pgsql/9.1/data
 pglog: /ephemeral/pgsql/9.1/pgstartup.log
+monitorusername: eemon
 dbusername: eemon
 eemondbpasswd: histpasswd
 rodbusername: reemon
