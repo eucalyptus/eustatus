@@ -51,6 +51,8 @@ eemon to write access to historydb
 
 Playbook will create security group and allow the access to ports 80,22,8443,ping by default
 
+For populating the image productname libguestfs-winsupport libguestfs-tools are needed on NC:s
+
 Use
 ---
 
