@@ -120,7 +120,7 @@ def getProductNameFromInstance(instanceId,nodeIp):
 	try:
 		#virtinspector2cmd = "uptime"
 		#virtinspector2cmd = "timeout 50 ssh -oStrictHostKeyChecking=no " + nodeIp + " \'" +"virt-inspector --xml "+instanceId +" 2>/dev/null | virt-inspector2 --xpath \"string(//operatingsystem/product_name)\"" + "\'"
-		virtinspector2cmd = "virt-inspector --xml "+instanceId +" 2>/dev/null | virt-inspector2 --xpath \"string(//operatingsystem/product_name)\""
+		virtinspector2cmd = "virt-inspector2 -d "+instanceId +" 2>/dev/null | virt-inspector2 --xpath \"string(//operatingsystem/product_name)\""
 		print "getProductNameFromInstance : ",virtinspector2cmd
 		#FIX needed: ubuntu images do not have product_name, they will show as empty space in db
 		ssh = paramiko.SSHClient()
