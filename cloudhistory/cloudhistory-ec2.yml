@@ -177,7 +177,7 @@
       action: template src=templates/move_db_dump.j2 dest=/root/move_db_dump.sh owner=root mode=0755
 
     - name: Create Cronjob for moving backup file
-      action: cron name="move backups" minute=30 hour="5" user=root job="timeout 3600 /root/move_db_dump.sh {{ cloudname }} >/dev/null 2>&1"
+      action: cron name="move backups" minute=30 hour="5" user=root job="timeout 3600 /root/move_db_dump.sh {{ histdbname }} >/dev/null 2>&1"
 
     - name: Create cloudhistory directory
       action: command su - eemon -l -c "mkdir -p {{ eemonhome }}/cloudhistory/"
