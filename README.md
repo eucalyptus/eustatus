@@ -42,6 +42,10 @@ Create keypair for use with history instance<br>
 Modify the vars/euca-dw.yml to match your environment
 
 Source your clouds credentials
+source eucarc
+
+If you want to avoid typing yes to accept ssh key inbetween playbook run 
+export ANSIBLE_HOST_KEY_CHECKING=False
 
 Launch the playbook with command
 ansible-playbook -vvv --private-key=mykey.private cloudhistory-ec2.yml
