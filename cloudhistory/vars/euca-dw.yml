@@ -15,6 +15,7 @@ cloudname: mycloud
 keypair: admindwtest
 instance_type: m1.small
 security_group: default
+vpcid: vpc-aabbccdd
 image: emi-BF873797
 ntphost: ntp
 eemonhome: /home_local/eemon
